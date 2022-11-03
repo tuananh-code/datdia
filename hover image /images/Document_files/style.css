@@ -1,0 +1,330 @@
+Reset HTML
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    /* font-size: 100%;
+    font: inherit; */
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+/* body {
+    line-height: 1;
+} */
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.back-img{
+    background-image: url('../images/bg.png');
+    background-size: cover;
+}
+
+.cursor li{
+    cursor: pointer;
+}
+
+.cursor div{
+    cursor: pointer;
+}
+
+.cursor-i{
+    cursor: pointer;
+}
+
+.ml-li li{
+    padding-left: 20px !important;
+}
+
+.tsi li{
+    font-size: smaller;
+}
+
+.bo-li li{
+    border-bottom: 5px solid orange !important;
+}
+
+.t-si{
+    font-size: small;
+}
+
+.bg-1{
+    background-color: #10617f!important;
+}
+
+.bg-2{
+    background-color: #0e5772!important;
+}
+
+.or{
+    color: rgb(255 157 0);
+}
+
+.ml div{
+    margin-left: 30px;
+}
+
+
+.w-72{
+    width: 760px;
+    margin: 0 auto;
+}
+
+.w-6{
+    width: 600px;
+    margin: 0 auto;
+}
+
+.w-54{
+    width: 540px;
+    margin: 0 auto;
+}
+
+.tl-1{
+    left: 89px;
+    top: -20px;
+}
+
+.tl-2{
+    top: -20px;
+    left: 104px;
+}
+
+.tl-3{
+    top: -20px;
+    left: 95px;
+}
+
+.hov:hover .hide{
+    display: block;
+}
+
+.hov:hover{
+    border-bottom: 2px solid #000 !important;
+}
+
+.hov-li:hover{
+    color: orange !important;
+}
+
+.hov-li-1:hover{
+    color: rgb(255, 166, 0) !important;
+}
+
+.hov-li-2:hover{
+    color: rgb(0, 0, 204) !important;
+}
+
+.hov-li-3:hover{
+    box-shadow: 0px 1px 4px 0px rgb(211, 211, 211) inset;
+    transition-timing-function: linear ;
+    transition-delay: 0.1s;
+}
+
+.hide {
+    display: none;
+}
+
+.locate{
+    top: 114px;
+    right: 566px;
+}
+
+.locate-2{
+    top: 114px;
+    right: 257px;
+}
+
+.none-pc{
+    display: none;
+}
+
+.pady-4{
+    padding-top: 1.5rem!important;
+    padding-bottom: 1.5rem!important;
+}
+
+.w-1000{
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.w-pc{
+    width: 18rem;
+}
+
+@media all and (max-width: 768px) {
+
+.none{
+    display: none !important;
+}
+
+.col-me{
+    flex-direction: column !important;
+}
+
+.hov-me:hover .hd-me{
+    display: block !important;
+}
+
+.hd-me{
+    display: none !important;
+}
+
+.show{
+    display: unset;
+}
+
+.show-li{
+    display: block;
+}
+
+.po-re{
+    position: relative;
+}
+
+.po-ab{
+    position: absolute;
+}
+
+.up-text{
+    text-transform: uppercase;
+}
+
+.located{
+    width: 100%;
+    left: 0px;
+    top: 60px;
+}
+
+.locate{
+    width: 100%;
+    left: 0px;
+    top: 72px;
+}
+
+.locate-2{
+    width: 100%;
+    left: 0px;
+    top: 216px;
+}
+
+.bor-b-me li{
+    border-bottom: 2px solid rgb(238, 238, 238) !important;
+}
+
+.px-me{
+    padding-left: 30px ;
+    padding-right: 30px;
+}
+
+.none-bor li{
+    border-right: 0px !important;
+    border-left: 0px !important;
+}
+
+.col-md-4{
+    width: 100%!important;
+}
+
+.py-me-1{
+    padding-top: 20px!important;
+    padding-bottom: 20px !important;
+}
+
+.btn-block{
+    gap: .5rem!important;
+    display: grid!important;
+}
+
+.col-md-1{
+    width: 100% !important;
+}
+
+.col-md-2{
+    width: 100% !important;
+}
+
+.col-md-9{
+    width: 100% !important;
+}
+
+.col-md-6{
+    width: 100% !important;
+}
+
+.col-md-me6{
+    width: 50% !important;
+}
+
+.col-md-3{
+    width: 100% !important;
+}
+
+.pe-5{
+    padding: 0px !important;
+}
+
+.fs-4{
+    font-size: unset !important;
+}
+
+.text-cen{
+    text-align: center;
+}
+
+.padb-3{
+    padding-top: 1rem !important;
+}
+
+.pady-4{
+    padding: 0px !important;
+}
+
+.w-1000{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.w-72{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.w-pc{
+    width: unset;
+}
+
+.ms-4{
+    margin: 0px !important;
+}
+
+}
