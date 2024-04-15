@@ -1,0 +1,58 @@
+.holtel-list-img-room {
+    padding-bottom: 0;
+}
+
+.holtel-list-img-room .carousel, 
+.holtel-list-img-room .carousel-inner,
+.holtel-list-img-room .carousel-item {
+    height: 100%;
+}
+
+.carousel-control {
+    background: transparent;
+    border: none;
+}
+
+.hotel-search-map .leaflet-popup-content-wrapper {
+    padding: 0;
+}
+
+.hotel-search-map .leaflet-popup-content {
+    margin: 0;
+}
+
+.has-search-map .bravo_search_map  .hotel-search-map .infobox-item {
+    padding-bottom: 12px !important;
+    border: none !important;
+    margin-bottom: 0 !important;
+}
+
+.hotel-search-map .leaflet-popup-close-button {
+    color: white !important;
+    right: unset;
+    left: 5px;
+    z-index: 10;
+}
+
+/* css car */
+.h-185 {
+    height: 185px;
+}
+
+.search-map-custom .leaflet-popup-content-wrapper {
+    padding: 0;
+}
+
+.search-map-custom .leaflet-popup-content {
+    margin: 0;
+}
+
+.search-map-custom .infobox-item {
+    margin-bottom: 0 !important;
+}
+
+.search-map-custom .leaflet-popup-close-button {
+    right: unset;
+    left: 5px;
+    z-index: 10;
+}
