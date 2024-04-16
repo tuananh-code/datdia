@@ -43,6 +43,13 @@ class SpaceController extends Controller
         $markers = [];
         if (!empty($list)) {
             foreach ($list as $row) {
+
+                // if (!empty($request->query('owner'))) {
+                if (true) {
+                    $infobox = view('Space::frontend.layouts.search.owner-loop-gird', ['row' => $row, 'disable_lazyload' => 1, 'wrap_class' => 'infobox-item'])->render();
+                } else {
+                    // $infobox = view('Space::frontend.layouts.search.loop-gird', ['row' => $row, 'disable_lazyload' => 1, 'wrap_class' => 'infobox-item'])->render();
+                }
                 $markers[] = [
                     "id"      => $row->id,
                     "title"   => $row->title,
@@ -50,7 +57,7 @@ class SpaceController extends Controller
                     "lng"     => (float)$row->map_lng,
                     // Change to get thumb image on S3
                     "gallery" => $row->getGalleryS3(true),
-                    "infobox" => view('Space::frontend.layouts.search.loop-gird', ['row' => $row, 'disable_lazyload' => 1, 'wrap_class' => 'infobox-item'])->render(),
+                    "infobox" => $infobox,
                     'marker' => get_file_url(setting_item("space_icon_marker_map"), 'full') ?? url('images/icons/png/pin.png'),
                     // get_price_show($row->price),
                 ];
@@ -72,6 +79,7 @@ class SpaceController extends Controller
         if ($request->query('_layout')) {
             $layout = $request->query('_layout');
         }
+
         if ($is_ajax) {
             return $this->sendSuccess([
                 'html'    => view('Space::frontend.layouts.search-map.list-item', $data)->render(),
@@ -114,6 +122,7 @@ class SpaceController extends Controller
         $this->setActiveMenu($row);
         return view('Space::frontend.detail', $data);
     }
+
     function formatNumberToVietnamese($number)
     {
         $units = ['', 'nghìn', 'triệu', 'tỷ'];

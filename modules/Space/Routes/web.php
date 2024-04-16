@@ -5,7 +5,9 @@ Route::group(['prefix'=>config('space.space_route_prefix')],function(){
     Route::get('/','SpaceController@index')->name('space.search'); // Search
     Route::get('/{slug}','SpaceController@detail')->name('space.detail');// Detail
 });
+// Data Contractors
 
+Route::resource('/owner', 'SpaceController');
 
 Route::group(['prefix'=>'user/'.config('space.space_route_prefix'),'middleware' => ['auth','verified']],function(){
     Route::get('/','ManageSpaceController@manageSpace')->name('space.vendor.index');

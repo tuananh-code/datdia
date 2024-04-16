@@ -34,5 +34,6 @@ Route::post('logout','\Modules\User\Controllers\UserController@logout')->name('a
 Route::get('social-login/{provider}', 'Auth\LoginController@socialLogin');
 Route::get('social-callback/{provider}', 'Auth\LoginController@socialCallBack');
 
+
 // Logs
 Route::get('admin/logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->middleware(['auth', 'dashboard','system_log_view']);

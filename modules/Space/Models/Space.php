@@ -960,7 +960,7 @@ class Space extends Bookable
         $model_space = parent::query()->select("bravo_spaces.*");
         $model_space->where("bravo_spaces.status", "publish");
         if (!empty($location_id = $request->query('location_id'))) {
-            $location = Location::query()->where('id', $location_id)->where("status","publish")->first();
+            $location = Location::query()->where('id', $location_id)->where("status", "publish")->first();
             if(!empty($location)){
                 $model_space->join('bravo_locations', function ($join) use ($location) {
                     $join->on('bravo_locations.id', '=', 'bravo_spaces.location_id')
@@ -976,7 +976,10 @@ class Space extends Bookable
                             AND ( (IFNULL(bravo_spaces.sale_price,0) > 0 and bravo_spaces.sale_price <= ? ) OR (IFNULL(bravo_spaces.sale_price,0) <= 0 and bravo_spaces.price <= ? ) )";
             $model_space->WhereRaw($raw_sql_min_max,[$pri_from,$pri_from,$pri_to,$pri_to]);
         }
-
+        if (!empty($owner = $request->query('owner'))) {
+            $raw_sql_owner = "IFNULL(bravo_spaces.contact, '') = ?";
+            $model_space->WhereRaw($raw_sql_owner, [$owner]);
+        }
         $terms = $request->query('terms');
         if($term_id = $request->query('term_id'))
         {
