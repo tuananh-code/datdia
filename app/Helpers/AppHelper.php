@@ -1222,7 +1222,29 @@ function formatNumberToVietnamese($number)
             }
         }
     }
-
-
     return ($formatted_price);
+}
+
+function serverPath()
+{
+    $current_path = $_SERVER['REQUEST_URI'];
+    $check_path = strpos($current_path, 'owner');
+    return $check_path;
+}
+function estatePath()
+{
+    $current_path = $_SERVER['REQUEST_URI'];
+    $position = strpos($current_path, "owner");
+    if ($position !== false) {
+        // Check if there are characters after "owner/"
+        $number = substr($current_path, $position + strlen("owner/"));
+        if (is_numeric($number)) {
+            $check = true;
+        } else {
+            $check = false;
+        }
+    } else {
+        $check = false;
+    }
+    return $check;
 }

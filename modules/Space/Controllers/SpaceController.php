@@ -37,7 +37,6 @@ class SpaceController extends Controller
 
     public function index(Request $request)
     {
-
         $is_ajax = $request->query('_ajax');
         $list = call_user_func([$this->spaceClass, 'search'], $request);
         $markers = [];
@@ -60,13 +59,14 @@ class SpaceController extends Controller
         if (empty(setting_item("space_location_search_style")) or setting_item("space_location_search_style") == "normal") {
             $limit_location = 1000;
         }
+
         $data = [
             'rows'               => $list,
             'list_location'      => $this->locationClass::where('status', 'publish')->limit($limit_location)->with(['translations'])->get()->toTree(),
             'space_min_max_price' => $this->spaceClass::getMinMaxPrice(),
             'markers'            => $markers,
             "blank"              => 1,
-            "seo_meta"           => $this->spaceClass::getSeoMetaForPageList()
+            "seo_meta"           => $this->spaceClass::getSeoMetaForPageList(),
         ];
         $layout = setting_item("space_layout_search", 'normal');
         if ($request->query('_layout')) {
@@ -91,6 +91,7 @@ class SpaceController extends Controller
     public function detail(Request $request, $slug)
     {
         $row = $this->spaceClass::where('slug', $slug)->with(['location', 'translations', 'hasWishList'])->first();
+        // dd($row->hasPermissionDetailView());
         if (empty($row) or !$row->hasPermissionDetailView()) {
             return redirect('/');
         }

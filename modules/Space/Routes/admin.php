@@ -2,7 +2,6 @@
 
 use \Illuminate\Support\Facades\Route;
 
-
 Route::get('/','SpaceController@index')->name('space.admin.index');
 Route::get('/create','SpaceController@create')->name('space.admin.create');
 Route::get('/edit/{id}','SpaceController@edit')->name('space.admin.edit');
