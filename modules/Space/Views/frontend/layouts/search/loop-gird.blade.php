@@ -17,8 +17,8 @@
                 <div class="carousel-item h-100 active">
                     <a @if (!empty($blank)) target="_blank" @endif
                         href="{{ $row->getDetailUrl($include_param ?? true) }}">
-                        <img src="{{get_file_url_s3($row->image_id)}}"
-                            class="img-responsive" alt="bat dong san">
+                        <img src="{{ get_file_url_s3($row->image_id) }}" class="img-responsive" alt="Trang thương mại điện tử bất động sản datdia">
+                        {{ $row->title }}
                     </a>
                 </div>
             </div>
