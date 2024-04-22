@@ -106,12 +106,12 @@ class OwnerController extends Controller
     public function estate(Request $request, $contact)
     {
         $is_ajax = $request->query('_ajax');
-        $list = $this->spaceClass::where('contact', $contact)->get();
-        // $lists = [
-        //     'total' => count($list),
-        //     'list' => $list
-        // ];
-        // dd($request);
+        $lists = $this->spaceClass::where('contact', $contact)->get();
+        if (@$lists[0]) {
+            $list = $this->spaceClass::where('contact', $contact)->get();
+        } else {
+            $list = $this->spaceClass::where('create_user', $contact)->get();
+        }
         $markers = [];
         if (!empty($list)) {
             foreach ($list as $row) {
@@ -177,32 +177,5 @@ class OwnerController extends Controller
             return view('Space::frontend.search-map', $data);
         }
         return view('Space::frontend.search', $data);
-    }
-
-    public function detail(Request $request, $slug)
-    {
-        $row = $this->spaceClass::where('slug', $slug)->with(['location', 'translations', 'hasWishList'])->first();
-        if (empty($row) or !$row->hasPermissionDetailView()) {
-            return redirect('/');
-        }
-        $translation = $row->translateOrOrigin(app()->getLocale());
-        $space_related = [];
-        $location_id = $row->location_id;
-        if (!empty($location_id)) {
-            $space_related = $this->spaceClass::where('location_id', $location_id)->where("status", "publish")->take(4)->whereNotIn('id', [$row->id])->with(['location', 'translations', 'hasWishList'])->get();
-        }
-        $review_list = $row->getReviewList();
-        $data = [
-            'row'          => $row,
-            'translation'       => $translation,
-            'space_related' => $space_related,
-            'location_category' => $this->locationCategoryClass::where("status", "publish")->with('location_category_translations')->get(),
-            'booking_data' => $row->getBookingData(),
-            'review_list'  => $review_list,
-            'seo_meta'  => $row->getSeoMetaWithTranslation(app()->getLocale(), $translation),
-            'body_class' => 'is_single'
-        ];
-        $this->setActiveMenu($row);
-        return view('Space::frontend.detail', $data);
     }
 }

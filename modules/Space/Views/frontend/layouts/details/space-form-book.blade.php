@@ -1,7 +1,12 @@
+@php
+    $vendor = $row->author;
+    $name = $vendor->user_name;
+    $phone = $vendor->phone;
+    $mail = $vendor->email;
+@endphp
 <div class="bravo_single_book_wrap">
     <div class="bravo_single_book">
         <div id="bravo_space_book_app" v-cloak>
-
             @if ($row->discount_percent)
                 <div class="tour-sale-box">
                     <span class="sale_class box_sale sale_small">{{ $row->discount_percent }}</span>
@@ -28,19 +33,28 @@
                     </span>
                 </div>
                 <div class="mt-2 text-dark">
-                    @if ($row->contact_name)
+                    @if ($name)
                         <div class="">
                             <h4>Thông tin liên hệ: </h4>
-                            <h4>{{ $row->contact_name }}
+                            <h4>{{ $name }}
                             </h4>
+                            <h4>SĐT: {{ $phone }}</h4>
                         </div>
-                    @endif
-                    @if ($row->contact)
-                        <div class="">
-                            <h4>
-                                SĐT: {{ $row->contact }}
-                            </h4>
-                        </div>
+                    @else
+                        @if ($row->contact_name)
+                            <div class="">
+                                <h4>Thông tin liên hệ: </h4>
+                                <h4>{{ $row->contact_name }}
+                                </h4>
+                            </div>
+                        @endif
+                        @if ($row->contact)
+                            <div class="">
+                                <h4>
+                                    SĐT: {{ $row->contact }}
+                                </h4>
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>

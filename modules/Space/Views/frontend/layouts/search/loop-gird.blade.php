@@ -2,6 +2,10 @@
     $translation = $row->translateOrOrigin(app()->getLocale());
     $current_path = serverPath();
     $estate_path = estatePath();
+    $vendor = $row->author;
+    $name = $vendor->user_name;
+    $phone = $vendor->phone;
+    $mail = $vendor->email;
 @endphp
 <div class="item-loop {{ $wrap_class ?? '' }}">
     @if ($row->is_featured == '1')
@@ -11,13 +15,13 @@
     @endif
     <div class="thumb-image p-0">
         @if ($current_path)
-            {{-- @dd($row->getDetailUrl()) --}}
             <div class="carousel-inner h-100">
                 {{-- Fix map show slide img --}}
                 <div class="carousel-item h-100 active">
                     <a @if (!empty($blank)) target="_blank" @endif
                         href="{{ $row->getDetailUrl($include_param ?? true) }}">
-                        <img src="{{ get_file_url_s3($row->image_id) }}" class="img-responsive" alt="Trang thương mại điện tử bất động sản datdia">
+                        <img src="{{ get_file_url_s3($row->image_id) }}" class="img-responsive"
+                            alt="Trang thương mại điện tử bất động sản datdia">
                         {{ $row->title }}
                     </a>
                 </div>
@@ -119,7 +123,11 @@
             @endif
             {{-- Change title --}}
             @if ($current_path)
-                {!! clean($row->contact_name) !!}
+                @if ($name)
+                    {!! clean($name) !!}
+                @else
+                    {!! clean($row->contact_name) !!}
+                @endif
             @else
                 {!! clean($translation->title) !!}
             @endif
@@ -134,10 +142,18 @@
                 @php
                     $contact = isset($row->contact) ? $row->contact : null;
                 @endphp
-                @if ($contact)
-                    <h5>{{ $contact }}</h5>
+                @if ($phone)
+                    @if ($phone)
+                        <h5>{{ $phone }}</h5>
+                    @elseif($mail)
+                        <h5>{{ $mail }}</h5>
+                    @endif
                 @else
-                    <h5>No Phone number</h5>
+                    @if ($contact)
+                        <h5>{{ $contact }}</h5>
+                    @else
+                        <h5>No Phone number</h5>
+                    @endif
                 @endif
                 @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
                 <h6>{{ $location->name ?? '' }}</h6>

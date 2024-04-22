@@ -15,18 +15,20 @@
                     @endif
                 </a>
                               {{-- Return to menu --}}
-                <div class="bravo-menu d-flex align-items-center">
-                  <?php 
-                      generate_menu('primary');
+                <div class="bravo-menu">
+                    <div class="d-flex align-items-center">
+                        <?php 
+                            generate_menu('primary');
 
-  					if(is_admin()){
-                    	echo "<div>
-                        		<a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space'> Crawl Space </a>
-                        		<a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space/cronjob/cron.php'> Cron Space </a>
-                        	</div>";
-                    } 
-                  
-                  ?>
+                            if(is_admin()){
+                                echo "<div>
+                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space'> Crawl Space </a>
+                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space/cronjob/cron.php'> Cron Space </a>
+                                    </div>";
+                            } 
+                        
+                        ?>
+                  </div>
                 </div>
             </div>
             <div class="header-right">

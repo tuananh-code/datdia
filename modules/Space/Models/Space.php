@@ -160,7 +160,11 @@ class Space extends Bookable
             }
             return url($urlDetail);
         } elseif ($current_path) {
-            $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->contact;
+            if ($this->contact) {
+                $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->contact;
+            } elseif ($this->author->id) {
+                $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->author->id;
+            }
             return url($urlDetail);
         } else {
             $param = [];
