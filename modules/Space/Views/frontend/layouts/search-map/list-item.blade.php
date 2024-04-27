@@ -1,5 +1,4 @@
 <div class="bravo-list-item @if (!$rows->count()) not-found @endif">
-
     @if ($rows->count())
         <div class="text-paginate">
             <h2 class="text">

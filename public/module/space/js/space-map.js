@@ -30,7 +30,6 @@ jQuery(function ($) {
 			}
 		}
 	});
-
 	$('.bravo_form_search_map .smart-search .child_id').change(function () {
 		reloadForm();
 	});

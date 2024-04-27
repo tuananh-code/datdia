@@ -7,6 +7,27 @@
         .bravo_footer {
             display: none
         }
+
+        .arrow-down:hover {
+            background: green !important;
+        }
+
+        .arrow-down:hover::before {
+            border-top: 10px solid green!important;
+        }
+
+        .arrow-down::before {
+            content: '';
+            position: absolute;
+            top: 60%;
+            left: 34%;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #ff0000;
+            /* Adjust color as needed */
+        }
     </style>
 @endsection
 @section('content')

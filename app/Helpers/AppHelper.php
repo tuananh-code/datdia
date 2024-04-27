@@ -1225,6 +1225,32 @@ function formatNumberToVietnamese($number)
     return ($formatted_price);
 }
 
+function formatNumberToVietnameseRound($number)
+{
+    // $number = 6800000000;
+    $formatted_price = number_format($number, 0, ',', '');
+    $format_price = intval($formatted_price);
+    $billion = floor($format_price / 1000000000);
+    $million = floor(($format_price % 1000000000) / 100000000);
+    $m = floor(($format_price % 1000000000) / 1000000);
+    if ($billion == 0 && $million == 0) {
+        $formatted_price = $m . ' tr';
+    } else {
+        if ($billion > 0 && $million == 0) {
+            $formatted_price = $billion . ' tỷ';
+        } else {
+            if ($billion == 0 && $million > 0) {
+                $formatted_price = $m . ' tr';
+            } elseif ($million > 0) {
+                $formatted_price = $billion . ',' . $million . ' tỷ ';
+            } else {
+                $formatted_price = $billion . ',0' . $million . ' tỷ ';
+            }
+        }
+    }
+    return ($formatted_price);
+}
+
 function serverPath()
 {
     $current_path = $_SERVER['REQUEST_URI'];
@@ -1247,4 +1273,15 @@ function estatePath()
         $check = false;
     }
     return $check;
+}
+
+function avatarEstate($url)
+{
+    if (!empty($url->avatar_id)) {
+        return get_file_url($url->avatar_id, 'thumb');
+    }
+    if (!empty($meta_avatar = $url->getMeta("social_meta_avatar", false))) {
+        return $meta_avatar;
+    }
+    return asset('images/avatar.png');
 }

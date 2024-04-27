@@ -42,7 +42,7 @@
                         @endphp
                         @foreach (explode(',', $row->gallery) as $key => $img)
                             <div class="carousel-item  h-100 @if (!$key) active @endif">
-                                <a @if (!empty($blank)) target="_blank" @endif
+                                <a @if (!empty($blank)) @endif
                                     href="{{ $row->getDetailUrl($include_param ?? true) }}">
                                     {{-- Get img show --}}
                                     {!! get_image_tag_s3($img, 'medium', ['class' => 'img-responsive d-block', 'alt' => $row->title]) !!}
@@ -95,7 +95,7 @@
         </div>
     </div>
     <div class="item-title">
-        <a @if (!empty($blank)) target="_blank" @endif
+        <a @if (!empty($blank)) @endif
             href="{{ $row->getDetailUrl($include_param ?? true) }}">
             @if ($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>

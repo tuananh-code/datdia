@@ -1,7 +1,7 @@
 <?php
 //if(!setting_item('tour_enable_inbox')) return;
 $vendor = $row->author;
-$contact = $row->contact; //
+$contact = $row->contact; 
 $phone = $vendor->phone;
 $mail = $vendor->email;
 ?>

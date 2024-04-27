@@ -4,7 +4,6 @@ ini_set('display_errors', 1);
 include_once 'config.php';
 include 'vendor/autoload.php';
 
-use GuzzleHttp\Client;
 
 $sql = "SELECT * FROM bravo_spaces WHERE map_lat = ''";
 $result = $conn->query($sql);

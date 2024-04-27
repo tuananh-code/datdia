@@ -3,9 +3,10 @@
     $id = $rows[0]->create_user;
     if ($id) {
         $results = DB::select('select * from users where id = ?', [$id]);
-        $name = $results[0]->business_name;
+        $name = $results[0]->user_name;
         $phone = $results[0]->phone;
         $mail = $results[0]->email;
+        $avatar_url = avatarEstate($results[0]);
     }
 @endphp
 <div class="bravo-list-item @if (!$rows->count()) not-found @endif">
@@ -34,11 +35,19 @@
             </style>
             <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                    <div class="col-2 p-2 col-mobile">
-                        <img width="100%"
-                            src="https://static-00.iconduck.com/assets.00/avatar-default-icon-512x506-865e9t94.png"
-                            alt="">
-                    </div>
+                    @if ($id)
+                        <div class="col-3 p-2 col-mobile">
+                            <a href="{{ route('user.profile', ['id' => $name ?? $id]) }}">
+                                <img class="rounded-circle" width="100%" src="{{ $avatar_url }}"
+                                    alt="{{ $name }}">
+                            </a>
+                        </div>
+                    @else
+                        <div class="col-2 p-2 col-mobile">
+                            <img width="100%" src="{{ asset('/uploads/avatar/avatar_default.png') }}"
+                                alt="{{ $rows[0]->contact_name }}">
+                        </div>
+                    @endif
                     <div class="text-left">
                         @if ($id)
                             <h4 class="">{{ $name }}</h4>

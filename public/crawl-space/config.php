@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $username = "datdia";
-$password = "eczFYNuAJR1OviyD1W2E";
+$password = "2JytKjf4h8FbxQNCGb1H";
 $dbname = "datdia";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);

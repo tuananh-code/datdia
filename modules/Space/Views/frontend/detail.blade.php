@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('head')
-    <link href="{{ asset('dist/frontend/module/space/css/space.css?_ver=' . config('app.version')) }}" rel="stylesheet">
+    <link href="{{ asset('dist/frontend/module/space/css/space.css?_ver='  .config('app.version')) }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('libs/ion_rangeslider/css/ion.rangeSlider.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('libs/fotorama/fotorama.css') }}" />
 @endsection
@@ -36,7 +36,6 @@
     <script>
         // Check before add var in every function make, it effects every & disable map in source code
         jQuery(function($) {
-            // var div = `<div class='p-1 background-success text-light border-0 rounded-circle'>${$row->price}</div>`;
             @if ($row->map_lat && $row->map_lng)
                 new BravoMapEngine('map_content', {
                     disableScripts: true,

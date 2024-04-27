@@ -42,6 +42,19 @@ class SpaceController extends Controller
         $markers = [];
         if (!empty($list)) {
             foreach ($list as $row) {
+                $price = formatNumberToVietnameseRound($row->price);
+                $div = "<div class='parent-down'>
+                            <div>
+                                <p class='arrow-down' style='
+                                width: 60px;
+                                background: red;
+                                padding: .5em;
+                                color: white;
+                                border-radius: 10px;
+                                font-size:14px;
+                                text-align:center'>$price</p>
+                            </div>
+                        </div>";
                 $markers[] = [
                     "id"      => $row->id,
                     "title"   => $row->title,
@@ -50,7 +63,8 @@ class SpaceController extends Controller
                     // Change to get thumb image on S3
                     "gallery" => $row->getGalleryS3(true),
                     "infobox" => view('Space::frontend.layouts.search.loop-gird', ['row' => $row, 'disable_lazyload' => 1, 'wrap_class' => 'infobox-item'])->render(),
-                    'marker' => get_file_url(setting_item("space_icon_marker_map"), 'full') ?? url('images/icons/png/pin.png'),
+                    // 'marker' => get_file_url(setting_item("space_icon_marker_map"), 'full') ?? url('images/icons/png/pin.png'),
+                    'marker' => $div,
                     // get_price_show($row->price),
                 ];
             }
@@ -83,6 +97,7 @@ class SpaceController extends Controller
         if ($layout == "map") {
             $data['body_class'] = 'has-search-map';
             $data['html_class'] = 'full-page';
+            // dd($data);
             return view('Space::frontend.search-map', $data);
         }
         return view('Space::frontend.search', $data);
