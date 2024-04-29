@@ -104,6 +104,9 @@ $result = $conn->query($sql);
                 <button class='m-2 p-2 bg-success text-light rounded-2' id='update'>
                     Update lat long
                 </button>
+                <button class='m-2 p-2 bg-success text-light rounded-2' id='updateExist'>
+                    Update duplicate lat long
+                </button>
             </div>
         </form>
         <div id='allData'>
@@ -112,12 +115,13 @@ $result = $conn->query($sql);
     </div>
     <div id="loadingAlert" class="" style="display:none;">
         <div class='d-flex justify-content-center'>
-            <img src="./image/713a3272124cc57ba9e9fb7f59e9ab3b.gif" alt="">
+            <!-- <img src="./image/713a3272124cc57ba9e9fb7f59e9ab3b.gif" alt=""> -->
         </div>
     </div>
 
     <!-- //FIXME: change path -->
-    <script type='text/javascript' src='./js/index.js'>
+    <script type='text/javascript' src='crawl-space/js/index.js'>
+    // <script type='text/javascript' src='./js/index.js'>
     </script>
 </body>
 

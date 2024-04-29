@@ -13,7 +13,7 @@
         }
 
         .arrow-down:hover::before {
-            border-top: 10px solid green!important;
+            border-top: 10px solid green !important;
         }
 
         .arrow-down::before {

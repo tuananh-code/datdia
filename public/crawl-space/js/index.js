@@ -159,10 +159,31 @@ $(document).on("click", "#getValue", function (e) {
 $("#update").click(function (e) {
     e.preventDefault();
     $.ajax({
-        data: "update",
+        data: {
+            action: "update",
+        },
         url: "/crawl-space/update_map.php",
         type: "post",
         success: function (result) {
+            if (result !== "none") {
+                alert("All space update success!!");
+            } else {
+                alert("All space update success!!");
+            }
+        },
+    });
+});
+
+$(document).on("click", "#updateExist", function (e) {
+    e.preventDefault();
+    $.ajax({
+        data: {
+            action: "update_exist",
+        },
+        url: "/crawl-space/update_map.php",
+        type: "post",
+        success: function (result) {
+            console.log(result);
             if (result !== "none") {
                 alert("All space update success!!");
             } else {

@@ -22,8 +22,8 @@
 
                             if(is_admin()){
                                 echo "<div>
-                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space'> Crawl Space </a>
-                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='https://datdia.com/crawl-space/cronjob/cron.php'> Cron Space </a>
+                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='http://127.0.0.1:8000/crawl-space'> Crawl Space </a>
+                                        <a class='btn-success p-2 m-2 btn' style='font-weight:bold' target='_blank' href='http://127.0.0.1:8000/crawl-space/cronjob/cron.php'> Cron Space </a>
                                     </div>";
                             } 
                         
