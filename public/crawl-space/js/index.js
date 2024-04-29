@@ -24,7 +24,7 @@ $("#select").change(function () {
 $(document).on("click", "#getValue", function (e) {
     e.preventDefault();
     var data = $("#formValue").serializeArray();
-    var url = $("#select").attr("data-web").split('|');
+    var url = $("#select").attr("data-web").split("|");
     var page = parseFloat($("#page").val());
     var xPath = $("#xPath").val();
     var pageOption = $("#pageOption").val();
@@ -56,7 +56,7 @@ $(document).on("click", "#getValue", function (e) {
     //     // });
     //     // return;
     for (var i = 0; i < url.length; i++) {
-      var multiUrl = url[i]
+        var multiUrl = url[i];
         $.ajax({
             data: {
                 // url: url,
@@ -90,7 +90,8 @@ $(document).on("click", "#getValue", function (e) {
                     // var pushAll = allContent += result['content'][x] + `<br>`;
                     var pushName = (allNames += result["name"][x] + `<br>`);
                     var pushPrice = (allPrices += result["price"][x] + `<br>`);
-                    var pushLocation = (allLocations += result["location"][x] + `<br>`);
+                    var pushLocation = (allLocations +=
+                        result["location"][x] + `<br>`);
                     // console.log(content);
                 }
                 // var para = `
@@ -162,8 +163,11 @@ $("#update").click(function (e) {
         url: "/crawl-space/update_map.php",
         type: "post",
         success: function (result) {
-            console.log(result);
-            alert('All space update success!!');
+            if (result !== "none") {
+                alert("All space update success!!");
+            } else {
+                alert("All space update success!!");
+            }
         },
     });
 });
