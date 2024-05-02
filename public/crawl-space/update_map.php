@@ -68,12 +68,18 @@ if ($_POST['action'] == 'update') {
   foreach ($result as $row) {
     $map_lat = $row['map_lat'];
     $map_lng = $row['map_lng'];
-    $sql_exist = "SELECT title, map_lat, map_lng FROM bravo_spaces WHERE map_lat = $map_lat AND map_lng = $map_lng";
+    $sql_exist = "SELECT title, location_id, map_lat, map_lng FROM bravo_spaces WHERE map_lat = $map_lat AND map_lng = $map_lng";
     $result_exist = $conn->query($sql_exist);
     foreach ($result_exist as $row_exist) {
-      $random_lat = mt_rand(1, 999) / 10000;
-      $random_long = mt_rand(1, 999) / 10000;
-
+      $location_id = $row_exist['location_id'];
+      if ($location_id == 13) {
+        $random_lat = mt_rand(99, 999) / mt_rand(100000, 200000);
+        $random_long = mt_rand(99, 999) / mt_rand(100000, 200000);
+      } else {
+        $random_lat = mt_rand(99, 999) / mt_rand(10000, 20000);
+        $random_long = mt_rand(99, 999) / mt_rand(10000, 20000);
+      }
+      
       $title = $row_exist['title'];
       $lat = $row_exist['map_lat'] + $random_lat;
       $long = $row_exist['map_lng'] + $random_long;
