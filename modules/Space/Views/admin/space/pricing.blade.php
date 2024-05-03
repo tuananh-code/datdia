@@ -18,12 +18,13 @@
                         <span><i>{{__("If the regular price is less than the discount , it will show the regular price")}}</i></span>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                {{-- FIXME: original --}}
+                {{-- <div class="col-lg-6">
                     <div class="form-group">
                         <label class="control-label">{{__("Max Guests")}}</label>
                         <input type="number" step="any" name="max_guests" class="form-control" value="{{$row->max_guests}}" >
                     </div>
-                </div>
+                </div> --}}
             </div>
         @endif
         <div class="form-group @if(!is_default_lang()) d-none @endif">
