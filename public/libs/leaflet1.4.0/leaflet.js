@@ -3894,7 +3894,8 @@
             _createImg: function (t, i) {
                 var space = '/space';
                 var owner = '/owner';
-                if(window.location.pathname == space || window.location.pathname.includes(owner)){
+                var en = '/en';
+                if(window.location.pathname == space || window.location.pathname.includes(owner) || window.location.pathname.includes(en)){
                     return (i = i || document.createElement("div")), (i.innerHTML = t), i;
                 }else{
                     return (i = i || document.createElement("img")), (i.src = t), i;
