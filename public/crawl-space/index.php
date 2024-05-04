@@ -9,7 +9,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="crawl-space/bootstrap-css/bootstrap.min.css" rel="stylesheet" >
+    <link href="crawl-space/bootstrap-css/bootstrap.min.css" rel="stylesheet">
     <!-- <link href="./bootstrap-css/bootstrap.min.css" rel="stylesheet" > -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <title>Document</title>
@@ -27,7 +27,7 @@ $result = $conn->query($sql);
             border: .15em solid black;
         }
 
-        .container{
+        .container {
             max-width: 92%;
         }
 
@@ -51,16 +51,16 @@ $result = $conn->query($sql);
         <form action="" method="post" accept-charset="UTF-8" id='formValue'>
             <div class='d-flex justify-content-center align-items-center m-4'>
                 <div class='m-2'>
-                    <label for="select">Chọn địa điểm</label>
+                    <!-- <label for="select">Chọn địa điểm</label>
                     <select name="select" id="select" class="form-select" multiple>
                         <?php foreach ($result as $row) { ?>
                             <option class="getWeb" value="<?= $row['url'] ?>" data-web='<?= $row['name'] ?>'>
                                 <?= $row['name'] ?>
                             </option>
                         <?php } ?>
-                    </select>
-                    <!-- <label for="url">Website</label>
-                    <input class="form-control" type="text" placeholder="Nhập URL Website" value="https://muaban.net/bat-dong-san/ban-nha-mat-tien" id='url' name='url'> -->
+                    </select> -->
+                    <label for="url">Website</label>
+                    <input class="form-control" type="text" placeholder="Nhập URL Website" value="https://www.century21.com.au/properties-for-sale?searchtype=sale" id='url' name='url'>
                     <!-- <select class="form-control" id='select' name='select'>
                         <option selected>Chọn website</option>
                         <option value="https://alonhadat.com.vn/nha-dat/can-ban">alonhadat.com.vn/nha-dat/can-ban</option>
@@ -122,7 +122,7 @@ $result = $conn->query($sql);
 
     <!-- //FIXME: change path -->
     <script type='text/javascript' src='crawl-space/js/index.js'>
-    // <script type='text/javascript' src='./js/index.js'>
+        // <script type='text/javascript' src='./js/index.js'>
     </script>
 </body>
 

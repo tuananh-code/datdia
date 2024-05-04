@@ -20,7 +20,7 @@
                         @else
                             <span class="onsale">{{ $row->display_sale_price }}</span>
                             <span class="text-price">
-                                {{ formatNumberToVietnamese($row->price) }}
+                                {{ formatNumberToVietnamese($row->price, $row->location_id) }}
                             </span>
                         @endif
                     </span>

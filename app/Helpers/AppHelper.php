@@ -1202,30 +1202,47 @@ function format_interval($d1, $d2 = '')
     return $result;
 }
 
-function formatNumberToVietnamese($number)
+function formatNumberToVietnamese($number, $location_id)
 {
     // $number = 6800000000;
     $formatted_price = number_format($number, 0, ',', '');
     $format_price = intval($formatted_price);
     $billion = floor($format_price / 1000000000);
     $million = floor(($format_price % 1000000000) / 1000000);
-    if ($billion == 0 && $million == 0) {
-        $formatted_price = $format_price . ' $';
-    } else {
-        if ($billion > 0 && $million == 0) {
-            $formatted_price = $billion . ' tỷ';
+    $t = number_format($format_price / 1000000, 2);
+    if ($location_id > 8) {
+        if ($billion == 0 && $million == 0) {
+            $formatted_price = $format_price . ' tr';
         } else {
-            if ($billion == 0 && $million > 0) {
-                $formatted_price = $million . ' triệu';
+            if ($billion > 0 && $million == 0) {
+                $formatted_price = $billion . ' tỷ';
             } else {
-                $formatted_price = $billion . ' tỷ ' . $million . ' triệu';
+                if ($billion == 0 && $million > 0) {
+                    $formatted_price = $million . ' triệu';
+                } else {
+                    $formatted_price = $billion . ' tỷ ' . $million . ' triệu';
+                }
+            }
+        }
+    } else {
+        if ($billion == 0 && $million == 0) {
+            $formatted_price = '$' . number_format($format_price);
+        } else {
+            if ($billion > 0 && $million == 0) {
+                $formatted_price = '$' . $billion . ' B';
+            } else {
+                if ($billion == 0 && $million > 0) {
+                    $formatted_price = '$' . $t . ' M';
+                } else {
+                    $formatted_price = '$' . $billion . ' B ' . $million . ' M';
+                }
             }
         }
     }
     return ($formatted_price);
 }
 
-function formatNumberToVietnameseRound($number)
+function formatNumberToVietnameseRound($number, $location_id)
 {
     // $number = 6800000000;
     $formatted_price = number_format($number, 0, ',', '');
@@ -1233,18 +1250,42 @@ function formatNumberToVietnameseRound($number)
     $billion = floor($format_price / 1000000000);
     $million = floor(($format_price % 1000000000) / 100000000);
     $m = floor(($format_price % 1000000000) / 1000000);
-    if ($billion == 0 && $million == 0) {
-        $formatted_price = $m . ' tr';
-    } else {
-        if ($billion > 0 && $million == 0) {
-            $formatted_price = $billion . ' tỷ';
+    $t = number_format($format_price / 1000000, 2);
+    $k = number_format($format_price / 1000, 0);
+    if ($location_id > 8) {
+        if ($billion == 0 && $million == 0) {
+            $formatted_price = $m . ' tr';
         } else {
-            if ($billion == 0 && $million > 0) {
-                $formatted_price = $m . ' tr';
-            } elseif ($million > 0) {
-                $formatted_price = $billion . ',' . $million . ' tỷ ';
+            if ($billion > 0 && $million == 0) {
+                $formatted_price = $billion . ' tỷ';
             } else {
-                $formatted_price = $billion . ',0' . $million . ' tỷ ';
+                if ($billion == 0 && $million > 0) {
+                    $formatted_price = $m . ' tr';
+                } elseif ($million > 0) {
+                    $formatted_price = $billion . ',' . $million . ' tỷ ';
+                } else {
+                    $formatted_price = $billion . ',0' . $million . ' tỷ ';
+                }
+            }
+        }
+    } else {
+        if ($t < 1  && $k > 0) {
+            $formatted_price = $k . 'K';
+        } else {
+            if ($billion == 0 && $million == 0) {
+                $formatted_price = $t . 'M';
+            } else {
+                if ($billion > 0 && $million == 0) {
+                    $formatted_price = number_format($billion) . 'B';
+                } else {
+                    if ($billion == 0 && $million > 0) {
+                        $formatted_price = $t . 'M';
+                    } elseif ($million > 0) {
+                        $formatted_price = $billion . ',' . $million . 'B';
+                    } else {
+                        $formatted_price = $billion . ',0' . $million . 'B';
+                    }
+                }
             }
         }
     }

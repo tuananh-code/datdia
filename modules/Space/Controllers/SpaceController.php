@@ -42,7 +42,7 @@ class SpaceController extends Controller
         $markers = [];
         if (!empty($list)) {
             foreach ($list as $row) {
-                $price = formatNumberToVietnameseRound($row->price);
+                $price = formatNumberToVietnameseRound($row->price, $row->location_id);
                 $div = "<div class='parent-down'>
                             <div>
                                 <p class='arrow-down' style='
@@ -129,19 +129,5 @@ class SpaceController extends Controller
         ];
         $this->setActiveMenu($row);
         return view('Space::frontend.detail', $data);
-    }
-    function formatNumberToVietnamese($number)
-    {
-        $units = ['', 'nghìn', 'triệu', 'tỷ'];
-        $number = (string) $number;
-        $length = strlen($number);
-        $formattedNumber = '';
-
-        for ($i = $length - 1; $i >= 0; $i -= 3) {
-            $chunk = substr($number, max(0, $i - 2), min(3, $i + 1));
-            $formattedNumber = $chunk != '000' ? $chunk . ' ' . $units[$length - $i / 3 - 1] . ' ' . $formattedNumber : $formattedNumber;
-        }
-
-        return trim($formattedNumber);
     }
 }

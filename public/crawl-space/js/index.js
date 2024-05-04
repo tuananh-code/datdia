@@ -24,7 +24,9 @@ $("#select").change(function () {
 $(document).on("click", "#getValue", function (e) {
     e.preventDefault();
     var data = $("#formValue").serializeArray();
-    var url = $("#select").attr("data-web").split("|");
+    //TODO: uncomment for muaban
+    // var url = $("#select").attr("data-web").split("|");
+    var url = $("#url").val();
     var page = parseFloat($("#page").val());
     var xPath = $("#xPath").val();
     var pageOption = $("#pageOption").val();
@@ -55,105 +57,86 @@ $(document).on("click", "#getValue", function (e) {
     //     //   },
     //     // });
     //     // return;
-    for (var i = 0; i < url.length; i++) {
-        var multiUrl = url[i];
-        $.ajax({
-            data: {
-                // url: url,
-                url: multiUrl,
-                // url: url + pageNumber + located[l],
-                // page: i,
-                xPath: xPath,
-            },
-            url: "/crawl-space/poe.php",
-            type: "post",
-            // dataType: 'JSON', // It bug the code and don't send value to ajax
-            // contentType: false,
-            beforeSend: function (xhr) {
-                $("#loadingAlert").fadeIn();
-            },
-            success: function (response) {
-                // console.log(response[0]);
-                if (response[0]) {
-                    var result = response[0];
-                } else {
-                    var result = response;
-                }
-                var contentLength = result["href"].length;
-                var allArr = [];
-                var allNames = "";
-                var allPrices = "";
-                var allLocations = "";
-                for (var x = 0; x < contentLength; x++) {
-                    var content = result["name"][x];
-                    // allArr.push(result['content'][x]);
-                    // var pushAll = allContent += result['content'][x] + `<br>`;
-                    var pushName = (allNames += result["name"][x] + `<br>`);
-                    var pushPrice = (allPrices += result["price"][x] + `<br>`);
-                    var pushLocation = (allLocations +=
-                        result["location"][x] + `<br>`);
-                    // console.log(content);
-                }
-                // var para = `
-                //     <td>${pushName}</td>
-                //     <td>${pushPrice}</td>
-                //     <td>${pushLocation}</td>`;
-                // var button = `<div class='d-flex align-items-center'>
-                //         <button type='submit' class='d-flex align-items-center p-1 getContent'> Lấy toàn bộ chap và nội dung </button>
-                //     </div>`;
-                // var getAll = $('#getAll');
-                // getAll.append(button)
-                var para = `
-                  <div class='d-flex'>
-                      <p class='col-lg-6 p-1'>${pushName}</p>
-                      <p class='col-lg-2 p-1'>${pushPrice}</p>
-                      <p class='col-lg-4 p-1'>${pushLocation}</p>
-                  </div>
-                  <br>`;
-                // var allContent = allArr.join(' '); // Join the array elements with a space
-                $("#allData").html(para);
-                var href = result["href"];
-                // console.log(href.length);
-                for (var i = 0; i < href.length; i++) {
-                    $.ajax({
-                        data: {
-                            infoName: result["name"][i],
-                            infoPrice: result["price"][i],
-                            infoLocation: result["location"][i],
-                            info: result["info"][i],
-                            // infoDescription: result['description'][i],
-                            // infoPrivate: result['info_private'][i],
-                            // infoPublic: result['info_public'][i],
-                            moreInfo: moreInfo,
-                            detail: detail,
-                            href: href[i],
-                        },
-                        url: "/crawl-space/getInfo.php",
-                        type: "post",
-                        success: function (getInfo) {
-                            // var geoLocation = [];
-                            console.log(getInfo);
-                            var geoLocation = getInfo["location"];
+    //     for (var l = 0; l < 1; l++) {
+    console.log("ok");
+    //TODO: for century21
+    var link = "https://www.century21.com.au/properties-for-sale";
+    var option = "&searchtype=sale";
+    // FIXME: Using recursive remove function to get original
+    var i = 1;
+    function processNext() {
+        if (i <= 24) {
+            var getUrl = link + pageOption + i + option;
+            $.ajax({
+                data: {
+                    url: getUrl,
+                    xPath: xPath,
+                },
+                url: "/crawl-space/poe.php",
+                type: "post",
+                beforeSend: function (xhr) {
+                    $("#loadingAlert").fadeIn();
+                },
+                success: function (response) {
+                    var result = response[0] || response;
+                    console.log(result);
+                    var href = result["href"];
+                    if (href[0].includes("muaban")) {
+                        var infoName = result["name"];
+                        var infoAddress = result["price"];
+                        var infoBed = result["location"];
+                        var infoBath = result["info"];
+                    } else if (href[0].includes("century21")) {
+                        var infoName = result["name"];
+                        var infoAddress = result["address"];
+                        var infoBed = result["bed"];
+                        var infoBath = result["bath"];
+                    }
+
+                    for (var j = 0; j < href.length; j++) {
+                        (function (j) {
+                            // Using a closure to preserve the value of j
                             $.ajax({
                                 data: {
-                                    location: geoLocation,
+                                    infoName: infoName[j],
+                                    infoAddress: infoAddress[j],
+                                    infoBed: infoBed[j],
+                                    infoBath: infoBath[j],
+                                    href: href[j],
                                 },
-                                url: "/crawl-space/lat_long_convert.php",
+                                url: "/crawl-space/getInfo.php",
                                 type: "post",
-                                success: function (getLatLong) {
-                                    console.log(getLatLong);
+                                success: function (getInfo) {
+                                    console.log(getInfo);
+                                    if (getInfo) {
+                                        var geoLocation = getInfo["location"];
+                                        $.ajax({
+                                            data: {
+                                                location: geoLocation,
+                                            },
+                                            url: "/crawl-space/lat_long_convert.php",
+                                            type: "post",
+                                            success: function (getLatLong) {
+                                                console.log(getLatLong);
+                                            },
+                                        });
+                                    }
                                 },
                             });
-                        },
-                    });
-                }
-            },
-            complete: function () {
-                $("#loadingAlert").fadeOut();
-            },
-        });
-        // }
+                        })(j);
+                    }
+                },
+                complete: function () {
+                    $("#loadingAlert").fadeOut();
+                    setTimeout(processNext, 30000); // Set timeout for 30 seconds after completing the AJAX request
+                    i++;
+                },
+            });
+        }
     }
+    processNext();
+    // }
+    // }
 });
 
 $("#update").click(function (e) {

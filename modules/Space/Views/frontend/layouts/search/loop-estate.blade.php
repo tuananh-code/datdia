@@ -78,7 +78,7 @@
                     <span class="onsale">{{ $row->display_sale_price }}</span>
                     <span class="text-price">
                         {{-- {{ $row->display_price }} --}}
-                        {{ formatNumberToVietnamese($row->price) }}
+                        {{ formatNumberToVietnamese($row->price, $row->location_id) }}
                     </span>
                 @endif
                 {{-- Turn off set day --}}

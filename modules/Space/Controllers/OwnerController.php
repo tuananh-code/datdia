@@ -133,7 +133,7 @@ class OwnerController extends Controller
         $markers = [];
         if (!empty($list)) {
             foreach ($list as $row) {
-                $price = formatNumberToVietnameseRound($row->price);
+                $price = formatNumberToVietnameseRound($row->price, $row->location_id);
                 $div = "<div class='parent-down'>
                             <div>
                                 <p class='arrow-down' style='

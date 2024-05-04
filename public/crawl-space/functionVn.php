@@ -1,4 +1,4 @@
-<?php 
+<?php
 function vn_to_str($str)
 {
 
@@ -44,4 +44,22 @@ function vn_to_str($str)
     $str = str_replace(' ', '-', $string);
 
     return $str;
+}
+
+function get_number($string)
+{
+    $pattern = '/\$[\d,]+/'; // Regular expression pattern to match numbers preceded by a dollar sign
+    preg_match_all($pattern, $string, $matches);
+
+    // Extract matched numbers and remove commas
+    $numbers = array_map(function ($match) {
+        return (int)str_replace(['$', ','], '', $match);
+    }, $matches[0]);
+    return $numbers;
+}
+function get_square($string)
+{
+    preg_match('/\d+/', $string, $matches);
+    $numbers = $matches[0];
+    return $numbers;
 }

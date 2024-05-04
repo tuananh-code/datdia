@@ -133,7 +133,7 @@ function processResponse($response)
         // Output the array as JSON
         echo json_encode($array);
         // die;
-    } else {
+    } elseif (strpos($_POST['url'], 'muaban.net') !== false) {
         $link = 'https://muaban.net';
         $names = $xpath->query('//*[contains(@class, "dGTvSk")]/a');
         $infos = $xpath->query('//*[contains(@class, "dGTvSk")]/ul');
@@ -170,6 +170,51 @@ function processResponse($response)
             'info' => $get_info,
             'price' => $get_price,
             'location' => $get_location,
+        ];
+        // Set the content type to JSON to get JSON value
+        header('Content-Type: application/json');
+        // Output the array as JSON
+        echo json_encode($array);
+    } elseif (strpos($_POST['url'], 'century21') !== false) {
+        $link = $xpath->query('//*[@class="propertyTile "]/a');
+        $titles = $xpath->query('//*[@class="title"]');
+        $address = $xpath->query('//*[@class="streetaddress oneline"]');
+        $bed = $xpath->query('//*[@class="icons"]/span[1]');
+        $bath = $xpath->query('//*[@class="icons"]/span[2]');
+    
+        // Lặp qua các hàng (rows) trong bảng
+        $get_name = [];
+        $get_all_href = [];
+        foreach ($link as $h) {
+            $href = $h->getAttribute('href');
+            $get_all_href[] = $href;
+        }
+        foreach ($titles as $t) {
+            $value_name = trim(str_replace("\n", '', $t->nodeValue));
+            $get_name[] = $value_name;
+        }
+        $get_address = [];
+        foreach ($address as $a) {
+            $value_address = $a->nodeValue;
+            $get_address[] = $value_address;
+        }
+        $get_bed = [];
+        foreach ($bed as $b) {
+            $value_bed = $b->nodeValue;
+            $get_bed[] = $value_bed;
+        }
+        $get_bath = [];
+        foreach ($bath as $h) {
+            $value_bath = $h->nodeValue;
+            $get_bath[] = $value_bath;
+        }
+        $array = [];
+        $array = [
+            'name' => $get_name,
+            'href' => $get_all_href,
+            'address' => $get_address,
+            'bed' => $get_bed,
+            'bath' => $get_bath,
         ];
         // Set the content type to JSON to get JSON value
         header('Content-Type: application/json');

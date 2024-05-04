@@ -14,51 +14,46 @@ if ($_POST['action'] == 'update') {
   // var_dump($result);die;
   if ($result->num_rows > 0) {
     foreach ($result as $row) {
-      $id[] = $row['id'];
-      $address = $row['address'];
-      $address2 = explode(',', $address);
-      $address3 = array_slice($address2, -3);
-      $location = implode(',', $address3);
-      $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . $location . ".json?proximity=ip&access_token=" . $accessToken . "";
-      // var_dump($url);die;
-      // $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . urlencode($location) . ".json";
-      $response = $client->request('GET', $url, [
-        'headers' => [
-          'Authorization' => 'Bearer ' . $accessToken,
-        ],
-      ]);
+      if ($row['location_id'] > 8) {
+        $id[] = $row['id'];
+        $address = $row['address'];
+        $address2 = explode(',', $address);
+        $address3 = array_slice($address2, -3);
+        $location = implode(',', $address3);
+        $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . $location . ".json?proximity=ip&access_token=" . $accessToken . "";
+        // var_dump($url);die;
+        // $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . urlencode($location) . ".json";
+        $response = $client->request('GET', $url, [
+          'headers' => [
+            'Authorization' => 'Bearer ' . $accessToken,
+          ],
+        ]);
 
 
-      $data = json_decode($response->getBody(), true);
-      $lat = $data['features'][0]['center'][1];
-      $long = $data['features'][0]['center'][0];
+        $data = json_decode($response->getBody(), true);
+        $lat = $data['features'][0]['center'][1];
+        $long = $data['features'][0]['center'][0];
 
-      if ($data['features'][0]) {
-        $sql_update = "UPDATE bravo_spaces SET map_lat = '$lat', map_lng= '$long' WHERE address = '$address'";
-        if (mysqli_query($conn, $sql_update)) {
-          $sql2 = "SELECT * FROM `bravo_spaces` WHERE map_lng < 0 Or map_lat < 0 OR map_lat='' OR map_lat < 8 OR map_lat > 24 OR map_lng < 100 OR map_lng > 110";
-          $result2 = $conn->query($sql2);
-          foreach ($result2 as $row2) {
-            $id2 = $row2['id'];
-            $delete = "DELETE FROM bravo_spaces WHERE id = $id2";
-            if ($conn->query($delete)) {
-              echo 'delete ok';
-            } else {
-              echo "Error: $delete " . mysqli_error($conn);
-            };
+        if ($data['features'][0]) {
+          $sql_update = "UPDATE bravo_spaces SET map_lat = '$lat', map_lng= '$long' WHERE address = '$address'";
+          if (mysqli_query($conn, $sql_update)) {
+            $sql2 = "SELECT * FROM `bravo_spaces` WHERE map_lng < 0 Or map_lat < 0 OR map_lat='' OR map_lat < 8 OR map_lat > 24 OR map_lng < 100 OR map_lng > 110";
+            $result2 = $conn->query($sql2);
+            foreach ($result2 as $row2) {
+              $id2 = $row2['id'];
+              $delete = "DELETE FROM bravo_spaces WHERE id = $id2";
+              if ($conn->query($delete)) {
+                echo 'delete ok';
+              } else {
+                echo "Error: $delete " . mysqli_error($conn);
+              };
+            }
+          } else {
+            echo "Error: $sql_update " . mysqli_error($conn);
           }
-        } else {
-          echo "Error: $sql_update " . mysqli_error($conn);
         }
       }
     }
-    // $ids = implode(',', $id);
-    // $delete = "DELETE FROM bravo_spaces WHERE id in ($ids)";
-    // if ($conn->query($delete)) {
-    //   echo 'ok';
-    // } else {
-    //   echo "Error: $delete " . mysqli_error($conn);
-    // };
   } else {
     echo 'none';
   }
@@ -79,7 +74,7 @@ if ($_POST['action'] == 'update') {
         $random_lat = mt_rand(99, 999) / mt_rand(10000, 20000);
         $random_long = mt_rand(99, 999) / mt_rand(10000, 20000);
       }
-      
+
       $title = $row_exist['title'];
       $lat = $row_exist['map_lat'] + $random_lat;
       $long = $row_exist['map_lng'] + $random_long;

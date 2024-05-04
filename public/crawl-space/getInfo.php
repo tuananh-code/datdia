@@ -33,7 +33,7 @@ function crawl($url, $page)
     curl_close($curl);
 
     // Process the response
-    processResponse($response, $page);
+    processResponse($response);
     // getAllPages($response);
 }
 
@@ -136,7 +136,7 @@ function processResponse($response)
         header('Content-Type: application/json');
         // Output the array as JSON
         echo json_encode($array[0]);
-    } else {
+    } else if (strpos($_POST['href'], 'muaban') !== false) {
         // var_dump($_POST);die;
         $info_name = $_POST['infoName'];
         $prices = $xpath->query('//*[contains(@class, "price")]'); //*[@id="__next"]/div[2]/div[3]/div/div[1]/div[2]/div[2]/div[1]
@@ -284,6 +284,65 @@ function processResponse($response)
         // // Output the array as JSON
         echo json_encode($array);
         // die;
+    } else if (strpos($_POST['href'], 'century21') !== false) {
+        $info_name = str_replace("'", "''", $_POST['infoName']);
+        $slug = vn_to_str(mb_strtolower(trim(str_replace("'", "''", $info_name))));
+        $convert_slug = str_replace('--', '-', $slug);
+        $get_location = $_POST['infoAddress'] . ', Australia';
+        $get_bedroom = $_POST['infoBed'];
+        $get_bathroom = $_POST['infoBath'];
+        //price
+        $prices = $xpath->query('//*[@class="pricetext"]')->item(0)->nodeValue;
+        $contents = $xpath->query('//*[@class="contentRegion"]/p');
+        $contact = $xpath->query('//*[@class="contact-mobile"]')->item(0)->nodeValue;
+        $contact_name = $xpath->query('//*[@class="name"]')->item(0)->nodeValue;
+        $squares = $xpath->query('//*[@class="kv-list stroked"]/li/span[2]')->item(0)->nodeValue;
+        $get_square = get_square($squares);
+
+        $image = $xpath->query('//*[@id="slideshow"]/div/span/link');
+        $get_numbers = get_number($prices);
+
+        if ($get_numbers[0]) {
+            //content
+            foreach ($contents as $c) {
+                $content[] = str_replace("'", "''", $c->nodeValue);
+            }
+            $convert_description = '<p style="font-size:16px">' . implode("<br>", $content) . '</p>';
+
+            //img
+            foreach ($image as $i) {
+                $get_img[] = $i->getAttribute('href');
+            }
+            $get_number = $get_numbers[0];
+            $get_phone = $contact;
+            if (!is_numeric($get_square)) {
+                $get_square = 0;
+            }
+            if (!is_numeric($get_bedroom)) {
+                $get_bedroom = 0;
+            }
+            if (!is_numeric($get_bathroom)) {
+                $get_bathroom = 0;
+            }
+            $get_floor = 0;
+            $array = [];
+            $array = [
+                'name' => $info_name,
+                'price' => $get_price,
+                'location' => $get_location,
+                'phone' => $get_phone,
+                'img' => $get_img[0],
+                'description' => $convert_description,
+                'info' => $get_info
+            ];
+            // Set the content type to JSON to get JSON value
+            header('Content-Type: application/json');
+            // // Output the array as JSON
+            echo json_encode($array);
+        } else {
+            $array = null;
+            echo $array;
+        }
     };
 
     if ($array) {
@@ -350,27 +409,33 @@ function processResponse($response)
         // var_dump($convert_row_img);die;
         $banner_img = $get_row_img[0];
         // unlink($temp_path);
-
-        $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = '$location_city'";
-        $result_location = mysqli_query($conn, $sql_location);
-        $row_location = mysqli_fetch_assoc($result_location);
-        // Get id-autoIncrement location
-        $status = "SHOW TABLE STATUS WHERE Name = 'bravo_locations'"; //
-        $id = $conn->query($status); //
-        // Get the ID:'auto-increment' value to add in relationship table
-        $row_id = $id->fetch_assoc(); //
-        $id_auto = $row_id['Auto_increment'];
-        if ($row_location) {
-            // echo 'Location exist';
+        if (strpos($_POST['href'], 'century21') !== false) {
+            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = 'Australia'";
+            $result_location = mysqli_query($conn, $sql_location);
+            $row_location = mysqli_fetch_assoc($result_location);
+            $location_id = $row_location['id'];
         } else {
-            $sql_located = "INSERT INTO bravo_locations (name, content, slug, image_id, map_lat, map_lng, map_zoom, _lft, _rgt, status) VALUES ('$location_city', '', '$location_slug', 121, '', '', 12, ($id_auto * 2) - 1, $id_auto * 2, 'publish')";
-            if (mysqli_query($conn, $sql_located)) {
-                // echo "Location Added";
+            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = '$location_city'";
+            $result_location = mysqli_query($conn, $sql_location);
+            $row_location = mysqli_fetch_assoc($result_location);
+            // Get id-autoIncrement location
+            $status = "SHOW TABLE STATUS WHERE Name = 'bravo_locations'"; //
+            $id = $conn->query($status); //
+            // Get the ID:'auto-increment' value to add in relationship table
+            $row_id = $id->fetch_assoc(); //
+            $id_auto = $row_id['Auto_increment'];
+            if ($row_location) {
+                // echo 'Location exist';
             } else {
-                echo "Error: $sql_located " . mysqli_error($conn);
+                $sql_located = "INSERT INTO bravo_locations (name, content, slug, image_id, map_lat, map_lng, map_zoom, _lft, _rgt, status) VALUES ('$location_city', '', '$location_slug', 121, '', '', 12, ($id_auto * 2) - 1, $id_auto * 2, 'publish')";
+                if (mysqli_query($conn, $sql_located)) {
+                    // echo "Location Added";
+                } else {
+                    echo "Error: $sql_located " . mysqli_error($conn);
+                }
             }
+            $location_id = $row_location['id'];
         }
-        $location_id = $row_location['id'];
         $sql_check_space = "SELECT * FROM `bravo_spaces` WHERE title = '$info_name'";
         $result_check_space = mysqli_query($conn, $sql_check_space);
         $row_check_space = mysqli_fetch_assoc($result_check_space);

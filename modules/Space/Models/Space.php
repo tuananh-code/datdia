@@ -1074,8 +1074,9 @@ class Space extends Bookable
                 break;
             default:
                 $model_space->orderBy("is_featured", "desc");
-                $model_space->orderBy("id", "desc");
-        }
+                // $model_space->orderBy("id", "desc");
+                $model_space->orderByRaw("CASE WHEN location_id < 9 THEN 1 ELSE 0 END, id DESC");
+            }
         // TODO: Select spaces executed contact duplicate
         $current_path = serverPath();
         if ($current_path) {
