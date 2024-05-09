@@ -1,7 +1,12 @@
-
+@php
+    $vendor = $row->author;
+    $name = $vendor->user_name;
+    $phone = $vendor->phone;
+    $mail = $vendor->email;
+@endphp
 <div class="bravo-more-book-mobile" style="z-index: 1234">
-    <div class="container ">
-        <div class="left">
+    <div class="container" style="height: 80px">
+        <div class="left" style="max-width: 44%">
             <div class="g-price">
                 <div class="prefix">
                     {{-- <span class="fr_text">{{__("from")}}</span> --}}
@@ -60,19 +65,42 @@
                 </div>
             @endif
         </div>
-        <div class="right mt-2">
-            @if ($row->contact_name)
+        <div class="right mt-2" style="max-width: 56%">
+            @if ($row->mail)
                 <div class="">
-                    <h4 class="m-0">{{ $row->contact_name }}
-                    </h4>
+                    <p class="m-0">{{ $row->contact_name }}</p>
+                    <p class="m-0">{{ $row->contact }}</p>
+                    <p class="m-0">{{ $row->mail }}</p>
                 </div>
-            @endif
-            @if ($row->contact)
-                <div class="">
-                    <h4>
-                        {{ $row->contact }}
-                    </h4>
-                </div>
+            @else
+                @if ($name)
+                    <div class="">
+                        <h4>{{ $name }}</h4>
+                        <h4>SĐT: {{ $phone }}</h4>
+                    </div>
+                @else
+                    @if ($row->contact_name && $row->contact)
+                        <div class="">
+                            <h4>{{ $row->contact_name }}</h4>
+                            <h4>
+                                SĐT: {{ $row->contact }}
+                            </h4>
+                        </div>
+                    @else
+                        @if ($row->contact_name)
+                            <div class="">
+                                <h4>{{ $row->contact_name }}</h4>
+                            </div>
+                        @endif
+                        @if ($row->contact)
+                            <div class="">
+                                <h4>
+                                    SĐT: {{ $row->contact }}
+                                </h4>
+                            </div>
+                        @endif
+                    @endif
+                @endif
             @endif
         </div>
     </div>

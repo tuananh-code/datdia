@@ -358,6 +358,7 @@ function processResponse_info($response, $url, $get_name)
             if ($row_check_space) {
                 // echo 'Estate Exist';
             } else {
+                $get_phone = str_replace(' ', '', $get_phone);
                 $post_date = date('Y-m-d H:m:s');
                 $sql_space = "INSERT INTO bravo_spaces (title, slug, content, image_id, banner_image_id, location_id, address, map_lat, map_lng, map_zoom, gallery, price, bed, bathroom, square, max_guests, contact, contact_name, created_at, updated_at, status) VALUES ('$info_name', '$convert_slug', '$convert_description', '$banner_img', '$banner_id', '$location_id', '$get_location', '', '', 12, '$convert_row_img', '$get_number', '$get_bedroom', '$get_bathroom', '$get_square', '$get_floor', '$get_phone', '$contact_name', '$post_date', '$post_date', 'publish')";
                 // var_dump($sql_space);die;

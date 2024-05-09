@@ -39,113 +39,53 @@ function processResponse($response)
     libxml_clear_errors();
 
     $xpath = new DOMXpath($dom);
-    $link = 'https://muaban.net/bat-dong-san/ban-nha-mat-tien';
-    $user_name = $xpath->query('//*[@id="__NEXT_DATA__"]')->item(0)->nodeValue;
-    $array = json_decode($user_name, true); // get Json value
-    var_dump($user_name);
-    // $href = $_GET['href'];
-    // $all_img = $xpath->query('//*[@id="dark_theme"]/section/div/div/div/div/article/h3');
-    $all_img = $xpath->query('//*[contains(@class, "title-news")]/a');
+    $prices = $xpath->query('//*[@class="pricetext"]')->item(0)->nodeValue;
+    $contents = $xpath->query('//*[@class="contentRegion"]/p');
+    $contact = $xpath->query('//*[@class="contact-mobile"]')->item(0)->nodeValue;
+    $mail = $xpath->query('//*[@class="contact-email"]')->item(0)->nodeValue;
+    $contact_name = $xpath->query('//*[@class="name"]')->item(0)->nodeValue;
+    $squares = $xpath->query('//*[@class="kv-list stroked"]/li/span[2]')->item(0)->nodeValue;
+    $image = $xpath->query('//*[@id="slideshow"]/div/span/link');
+    // $link = $xpath->query('//*[@class="propertyTile "]/a');
+    // $titles = $xpath->query('//*[@class="title"]');
+    // $address = $xpath->query('//*[@class="streetaddress oneline"]');
+    // $bed = $xpath->query('//*[@class="icons"]/span[1]');
+    // $bath = $xpath->query('//*[@class="icons"]/span[2]');
+    // $link = $xpath->query('//*[@id="swipeable"]/div/a');
+    //*[@id="swipeable"]/div/a
+    var_dump($mail);
+    die;
+    foreach ($image as $c) {
+        $img = $c->getAttribute('href');
+        echo "<img src='$img'>";
+    }
+    $price = get_number($prices);
+    $square = get_square($squares);
 
-    foreach ($all_img as $img) {
-        $va = $img->nodeValue;
-        echo $va . '<br>';
+    foreach ($link as $h) {
+        $href[] = $h->getAttribute('href');
     }
-    die;
-    $names = $xpath->query('//*[contains(@class, "item-post")]/a');
-    $infos = $xpath->query('//*[contains(@class, "dGTvSk")]/ul');
-    $prices = $xpath->query('//*[contains(@class, "price")]');
-    $locations = $xpath->query('//*[contains(@class, "hYvkOS")]');
-    $user_name = $xpath->query('//*[@id="__NEXT_DATA__"]')->item(0)->nodeValue;
-    $img = $xpath->query('//*[contains(@class, "slick-track")]')->item(0);
-    $image = $xpath->query('.//img', $img);
-    // $get = [];
-    // foreach ($user_name as $im) {
-    //     $value = $im->nodeValue;
-    //     $get[] = $value;
-    //     // echo ($value);
-    // }
-    $array = json_decode($user_name, true);
-    // var_dump($get);die;
-    var_dump($array['props']['pageProps']);
-    die;
-    // $all_img = $xpath->query('//*[contains(@class, "kzipBv")]/img'); //*[@id="__next"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/div[8]/div/div/img
-    $all_img = $xpath->query('//*[@id="__next"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/div[4]/div/div/img');
-
-    // $all_img  = $xpath->query('.//img', $all_img_raw);
-    // Lặp qua các hàng (rows) trong bảng
-    $get = [];
-    foreach ($all_img as $img) {
-        $value = $img->getAttribute('src');
-        $get[] = $value;
+    foreach ($titles as $t) {
+        $title[] = $t->nodeValue;
     }
-    var_dump($get);
-    die;
-    $get_name = [];
-    $get_href = [];
-    foreach ($names as $name) {
-        $value_name = $name->nodeValue;
-        $href = $name->getAttribute('href');
-        $get_href[] = $link . $href;
-        $get_name[] = $value_name;
+    foreach ($prices as $p) {
+        $price[] = $p->nodeValue;
+        // $check = get_number($p->nodeValue);
+        // if ($check[0]) {
+        //     $price[] = $check[0];
+        // }
     }
-    $get_price = [];
-    foreach ($prices as $price) {
-        $value_price = $price->nodeValue;
-        $get_price[] = $value_price;
+    foreach ($address as $d) {
+        $add[] = $d->nodeValue;
     }
-    $get_info = [];
-    foreach ($infos as $info) {
-        $value_info = $info->nodeValue;
-        $get_info[] = $value_info;
+    foreach ($bed as $b) {
+        $info_bed[] = $b->nodeValue;
     }
-    $get_location = [];
-    foreach ($locations as $location) {
-        $value_location = $location->nodeValue;
-        $get_location[] = $value_location;
+    foreach ($bath as $ba) {
+        $info_bath[] = $ba->nodeValue;
     }
-
-    var_dump($get_price);
-    die;
-    $rows = $xpath->query('.//tr', $table);
-    foreach ($rows as $row) {
-        // Lặp qua các ô (cells) trong hàng
-        $cells = $xpath->query('.//td', $row);
-        foreach ($cells as $cell) {
-            // Lấy giá trị của ô
-            $value = trim($cell->nodeValue);
-            echo $value . "<br>";
-        }
-    }    // $pages = $xpath->query('//*[@id="chapters"]/div[1]/ul');            // this is all div
-    // $href = $xpath->query('//*[@id="left"]/div[1]/div[1]/div[3]/a');
-    $img = $xpath->query('//*[@id="left"]/div[1]/div[7]')->item(0); //*[@id="left"]/div[1]/div[2]
-    $image = $xpath->query('.//img', $img);
-    die;
-    $get = [];
-    foreach ($texts as $text) {
-        $src = $text->nodeValue;
-        $get[] = $src;
-    }
-    // $get = [];
-    // $values = $href->item(0);
-    // $all = $values->getAttribute('href');
-    // $get[] = $values;
-    // var_dump ($all);
-    // $node = $img->item(0);
-    // $get = $node->getAttribute('src');
-    // $imageUrl = $link . $get;
-    // $fileName = basename($imageUrl);
-
-    // @$rawImage = file_get_contents($imageUrl);
-    // if ($rawImage) {
-    //     file_put_contents("img/" . $fileName, $rawImage);
-    //     echo 'Image Saved';
-    // } else {
-    //     echo 'Error Occured';
-    // }
-    // This is allva div
-    //*[@id="main-content"]/div/div[1]/div/div[2]/div[4]/div/div/a/img
 }
 
 // Start crawling from a specific URL
-crawl("https://muaban.net/bat-dong-san/nha-mat-tien/cho-thue-tang-tret-tang-lung-lau-1-toa-nha-294-huynh-v-banh-gia-tl-id68704708", 2);
+crawl("https://www.century21.com.au/property/residential/buy/qld/4032/chermside/578874", 2);
+// crawl("https://www.zillow.com/new-york-ny/", 2);

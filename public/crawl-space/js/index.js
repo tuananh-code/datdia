@@ -60,16 +60,18 @@ $(document).on("click", "#getValue", function (e) {
     //     for (var l = 0; l < 1; l++) {
     console.log("ok");
     //TODO: for century21
-    var link = "https://www.century21.com.au/properties-for-sale";
-    var option = "&searchtype=sale";
+    var link = "https://www.estately.com/NY/New_York";
     // FIXME: Using recursive remove function to get original
     var i = 1;
     function processNext() {
-        if (i <= 24) {
-            var getUrl = link + pageOption + i + option;
+        if (i <= 2) {
+            var getUrl = link + pageOption + i;
+            // var getUrl = link + pageOption + i + option;
+            console.log(getUrl);
             $.ajax({
                 data: {
                     url: getUrl,
+                    // url: link,
                     xPath: xPath,
                 },
                 url: "/crawl-space/poe.php",
@@ -86,49 +88,60 @@ $(document).on("click", "#getValue", function (e) {
                         var infoAddress = result["price"];
                         var infoBed = result["location"];
                         var infoBath = result["info"];
+                        var infoSquare = null;
+                        var infoPrice = null;
                     } else if (href[0].includes("century21")) {
                         var infoName = result["name"];
                         var infoAddress = result["address"];
                         var infoBed = result["bed"];
                         var infoBath = result["bath"];
+                        var infoSquare = null;
+                        var infoPrice = null;
+                    } else if (href[0].includes("estately")) {
+                        var infoName = result["name"];
+                        var infoAddress = result["address"];
+                        var infoBed = result["bed"];
+                        var infoBath = result["bath"];
+                        var infoSquare = result["sqm"];
+                        var infoPrice = result["price"];
                     }
 
                     for (var j = 0; j < href.length; j++) {
-                        (function (j) {
-                            // Using a closure to preserve the value of j
-                            $.ajax({
-                                data: {
-                                    infoName: infoName[j],
-                                    infoAddress: infoAddress[j],
-                                    infoBed: infoBed[j],
-                                    infoBath: infoBath[j],
-                                    href: href[j],
-                                },
-                                url: "/crawl-space/getInfo.php",
-                                type: "post",
-                                success: function (getInfo) {
-                                    console.log(getInfo);
-                                    if (getInfo) {
-                                        var geoLocation = getInfo["location"];
-                                        $.ajax({
-                                            data: {
-                                                location: geoLocation,
-                                            },
-                                            url: "/crawl-space/lat_long_convert.php",
-                                            type: "post",
-                                            success: function (getLatLong) {
-                                                console.log(getLatLong);
-                                            },
-                                        });
-                                    }
-                                },
-                            });
-                        })(j);
+                        // Using a closure to preserve the value of j
+                        $.ajax({
+                            data: {
+                                infoName: infoName[j],
+                                infoAddress: infoAddress[j],
+                                infoPrice: infoPrice[j],
+                                infoBed: infoBed[j],
+                                infoBath: infoBath[j],
+                                infoSquare: infoSquare[j],
+                                href: href[j],
+                            },
+                            url: "/crawl-space/getInfo.php",
+                            type: "post",
+                            success: function (getInfo) {
+                                console.log(getInfo);
+                                if (getInfo) {
+                                    var geoLocation = getInfo["location"];
+                                    $.ajax({
+                                        data: {
+                                            location: geoLocation,
+                                        },
+                                        url: "/crawl-space/lat_long_convert.php",
+                                        type: "post",
+                                        success: function (getLatLong) {
+                                            console.log(getLatLong);
+                                        },
+                                    });
+                                }
+                            },
+                        });
                     }
                 },
                 complete: function () {
                     $("#loadingAlert").fadeOut();
-                    setTimeout(processNext, 30000); // Set timeout for 30 seconds after completing the AJAX request
+                    setTimeout(processNext, 20000); // Set timeout for 30 seconds after completing the AJAX request
                     i++;
                 },
             });

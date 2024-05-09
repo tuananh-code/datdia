@@ -1,6 +1,6 @@
 <?php
 $getAllUrls = [];
-
+include_once 'functionVn.php';
 // error_reporting(0);
 // var_dump($_POST);
 function crawl($url, $page)
@@ -181,7 +181,7 @@ function processResponse($response)
         $address = $xpath->query('//*[@class="streetaddress oneline"]');
         $bed = $xpath->query('//*[@class="icons"]/span[1]');
         $bath = $xpath->query('//*[@class="icons"]/span[2]');
-    
+
         // Lặp qua các hàng (rows) trong bảng
         $get_name = [];
         $get_all_href = [];
@@ -215,6 +215,76 @@ function processResponse($response)
             'address' => $get_address,
             'bed' => $get_bed,
             'bath' => $get_bath,
+        ];
+        // Set the content type to JSON to get JSON value
+        header('Content-Type: application/json');
+        // Output the array as JSON
+        echo json_encode($array);
+    } elseif (strpos($_POST['url'], 'remax.com') !== false) {
+        $link = $xpath->query('//*[@class="result-item-details"]/div/h2/a');
+        $price = $xpath->query('//*[@class="result-price margin-bottom-10"]');
+        $stats = $xpath->query('//*[@class="list-unstyled margin-0 result-basics-grid"]');
+
+        $get_name = [];
+        $get_all_href = [];
+        $get_address = [];
+        $price = [];
+        foreach ($link as $h) {
+            $href = $h->getAttribute('href');
+            $get_all_href[] = $href;
+        }
+        foreach ($titles as $t) {
+            $value_name = trim(str_replace("\n", '', $t->nodeValue));
+            $get_name[] = $value_name;
+            $get_address[] = $value_name;
+        }
+        foreach ($prices as $p) {
+            $price = trim(str_replace("\n", '', $p->nodeValue));
+            $get_price[] = $price;
+        }
+        foreach ($stats as $s) {
+            $stat = explode('Beds', $s->nodeValue);
+            $stat2 = explode('Baths', $stat[1]);
+            $bed[] = $stat[0];
+            $bath[] = $stat2[0];
+            $sqm[] = $stat2[1];
+        }
+    } elseif (strpos($_POST['url'], 'estately.com') !== false) {
+        $link = $xpath->query('//*[@class="result-item-details"]/div/h2/a');
+        $prices = $xpath->query('//*[@class="result-price margin-bottom-10"]');
+        $stats = $xpath->query('//*[@class="list-unstyled margin-0 result-basics-grid"]');
+        $get_name = [];
+        $get_all_href = [];
+        $get_address = [];
+        $price = [];
+        foreach ($link as $h) {
+            $href = $h->getAttribute('href');
+            $get_all_href[] = $href;
+            $value_name = trim(str_replace("\n", '', $h->nodeValue));
+            $get_name[] = $value_name;
+            $get_address[] = $value_name;
+        }
+
+        foreach ($prices as $p) {
+            // $price = get_price($p->nodeValue);
+            $get_price[] = get_price($p->nodeValue);
+        }
+        foreach ($stats as $s) {
+            $stat = explode('beds', $s->nodeValue);
+            $get_bed[] = trim($stat[0]);
+            $stat2 = explode('baths', $stat[1]);
+            $get_bath[] = trim($stat2[0]);
+            $sqm[] = trim(str_replace(',', '', get_square($stat2[1])[0]));
+        }
+        $array = [];
+        $array = [
+            'name' => $get_name,
+            'href' => $get_all_href,
+            'address' => $get_address,
+            'price' => $get_price,
+            'bed' => $get_bed,
+            'bath' => $get_bath,
+            'sqm' => $sqm
         ];
         // Set the content type to JSON to get JSON value
         header('Content-Type: application/json');

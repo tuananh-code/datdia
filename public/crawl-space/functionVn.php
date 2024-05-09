@@ -57,9 +57,21 @@ function get_number($string)
     }, $matches[0]);
     return $numbers;
 }
+
+function get_price($string)
+{
+    $number = preg_replace('/[^0-9]/', '', $string);
+    return $number;  // Output: 849000
+}
 function get_square($string)
 {
-    preg_match('/\d+/', $string, $matches);
+    preg_match_all('/\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\b/', $string, $matches);
     $numbers = $matches[0];
     return $numbers;
+}
+
+function get_phone($string)
+{
+    $cleaned_number = preg_replace('/\D/', '', $string);
+    return $cleaned_number;
 }

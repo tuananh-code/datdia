@@ -1,6 +1,7 @@
 @php
     $vendor = $row->author;
     $name = $vendor->user_name;
+    $business = $vendor->business_name;
     $phone = $vendor->phone;
     $mail = $vendor->email;
 @endphp
@@ -33,27 +34,59 @@
                     </span>
                 </div>
                 <div class="mt-2 text-dark">
-                    @if ($name)
+                    @if ($row->mail)
                         <div class="">
                             <h4>Thông tin liên hệ: </h4>
-                            <h4>{{ $name }}
+                            <h4>{{ $row->contact_name }}
                             </h4>
-                            <h4>SĐT: {{ $phone }}</h4>
+                            <h4>SĐT: {{ $row->contact }}</h4>
+                            <h4>Email: {{ $row->mail }}</h4>
                         </div>
                     @else
-                        @if ($row->contact_name)
+                        @if ($business)
                             <div class="">
                                 <h4>Thông tin liên hệ: </h4>
-                                <h4>{{ $row->contact_name }}
+                                <h4>{{ $business }}
                                 </h4>
+                                <h4>SĐT: {{ $phone }}</h4>
                             </div>
-                        @endif
-                        @if ($row->contact)
-                            <div class="">
-                                <h4>
-                                    SĐT: {{ $row->contact }}
-                                </h4>
-                            </div>
+                        @else
+                            @if ($name)
+                                <div class="">
+                                    <h4>Thông tin liên hệ: </h4>
+                                    <h4>{{ $name }}
+                                    </h4>
+                                    <h4>SĐT: {{ $phone }}</h4>
+                                </div>
+                            @else
+                                @if ($row->contact_name && $row->contact)
+                                    <div class="">
+                                        <h4>Thông tin liên hệ: </h4>
+                                        <h4>{{ $row->contact_name }}
+                                        </h4>
+                                    </div>
+                                    <div class="">
+                                        <h4>
+                                            SĐT: {{ $row->contact }}
+                                        </h4>
+                                    </div>
+                                @else
+                                    @if ($row->contact_name)
+                                        <div class="">
+                                            <h4>Thông tin liên hệ: </h4>
+                                            <h4>{{ $row->contact_name }}
+                                            </h4>
+                                        </div>
+                                    @endif
+                                    @if ($row->contact)
+                                        <div class="">
+                                            <h4>
+                                                SĐT: {{ $row->contact }}
+                                            </h4>
+                                        </div>
+                                    @endif
+                                @endif
+                            @endif
                         @endif
                     @endif
                 </div>

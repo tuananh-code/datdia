@@ -1305,7 +1305,8 @@ function estatePath()
     if ($position !== false) {
         // Check if there are characters after "owner/"
         $number = substr($current_path, $position + strlen("owner/"));
-        if (is_numeric($number)) {
+        if ($number) {
+            // if (is_numeric($number)) {
             $check = true;
         } else {
             $check = false;

@@ -11,7 +11,6 @@ $client = new Client();
 if ($_POST['action'] == 'update') {
   $sql = "SELECT * FROM `bravo_spaces` WHERE map_lng < 0 Or map_lat < 0 OR map_lat='' OR map_lat < 8 OR map_lat > 24 OR map_lng < 100 OR map_lng > 110";
   $result = $conn->query($sql);
-  // var_dump($result);die;
   if ($result->num_rows > 0) {
     foreach ($result as $row) {
       if ($row['location_id'] > 8) {
@@ -21,7 +20,6 @@ if ($_POST['action'] == 'update') {
         $address3 = array_slice($address2, -3);
         $location = implode(',', $address3);
         $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . $location . ".json?proximity=ip&access_token=" . $accessToken . "";
-        // var_dump($url);die;
         // $url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" . urlencode($location) . ".json";
         $response = $client->request('GET', $url, [
           'headers' => [
@@ -40,18 +38,22 @@ if ($_POST['action'] == 'update') {
             $sql2 = "SELECT * FROM `bravo_spaces` WHERE map_lng < 0 Or map_lat < 0 OR map_lat='' OR map_lat < 8 OR map_lat > 24 OR map_lng < 100 OR map_lng > 110";
             $result2 = $conn->query($sql2);
             foreach ($result2 as $row2) {
-              $id2 = $row2['id'];
-              $delete = "DELETE FROM bravo_spaces WHERE id = $id2";
-              if ($conn->query($delete)) {
-                echo 'delete ok';
-              } else {
-                echo "Error: $delete " . mysqli_error($conn);
-              };
+              if ($row2['location_id'] > 8) {
+                $id2 = $row2['id'];
+                $delete = "DELETE FROM bravo_spaces WHERE id = $id2";
+                if ($conn->query($delete)) {
+                  echo 'delete ok';
+                } else {
+                  echo "Error: $delete " . mysqli_error($conn);
+                };
+              }
             }
           } else {
             echo "Error: $sql_update " . mysqli_error($conn);
           }
         }
+      } else {
+        echo 'done';
       }
     }
   } else {

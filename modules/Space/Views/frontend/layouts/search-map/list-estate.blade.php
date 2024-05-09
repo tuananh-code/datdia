@@ -4,6 +4,7 @@
     if ($id) {
         $results = DB::select('select * from users where id = ?', [$id]);
         $name = $results[0]->user_name;
+        $business = $results[0]->business_name;
         $phone = $results[0]->phone;
         $mail = $results[0]->email;
         $avatar_url = avatarEstate($results[0]);
@@ -50,7 +51,11 @@
                     @endif
                     <div class="text-left">
                         @if ($id)
-                            <h4 class="">{{ $name }}</h4>
+                            @if ($business)
+                                <h4 class="">{{ $business }}</h4>
+                            @elseif($name)
+                                <h4 class="">{{ $name }}</h4>
+                            @endif
                             @if ($phone)
                                 <div>
                                     <h4 class="">SĐT: {{ $phone }}</h4>

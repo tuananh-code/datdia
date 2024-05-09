@@ -288,14 +288,15 @@ function processResponse($response)
         $info_name = str_replace("'", "''", $_POST['infoName']);
         $slug = vn_to_str(mb_strtolower(trim(str_replace("'", "''", $info_name))));
         $convert_slug = str_replace('--', '-', $slug);
-        $get_location = $_POST['infoAddress'] . ', Australia';
+        $get_location = str_replace("'", "''", $_POST['infoAddress']) . ', Australia';
         $get_bedroom = $_POST['infoBed'];
         $get_bathroom = $_POST['infoBath'];
         //price
         $prices = $xpath->query('//*[@class="pricetext"]')->item(0)->nodeValue;
         $contents = $xpath->query('//*[@class="contentRegion"]/p');
         $contact = $xpath->query('//*[@class="contact-mobile"]')->item(0)->nodeValue;
-        $contact_name = $xpath->query('//*[@class="name"]')->item(0)->nodeValue;
+        $contact_name = str_replace("'", "''", $xpath->query('//*[@class="name"]')->item(0)->nodeValue);
+        $mail = $xpath->query('//*[@class="contact-email"]')->item(0)->nodeValue;
         $squares = $xpath->query('//*[@class="kv-list stroked"]/li/span[2]')->item(0)->nodeValue;
         $get_square = get_square($squares);
 
@@ -343,8 +344,58 @@ function processResponse($response)
             $array = null;
             echo $array;
         }
-    };
+    } else if (strpos($_POST['href'], 'estately') !== false) {
+        $info_name = str_replace("'", "''", $_POST['infoName']);
+        $slug = vn_to_str(mb_strtolower(trim(str_replace("'", "''", $info_name))));
+        $convert_slug = str_replace('--', '-', $slug);
+        $get_location = str_replace("'", "''", $_POST['infoAddress']) . ', USA';
+        $get_bedroom = $_POST['infoBed'];
+        $get_bathroom = $_POST['infoBath'];
+        $get_square = $_POST['infoSquare'];
+        $get_price = $_POST['infoPrice'];
+        $get_number = $get_price;
 
+        $description = $xpath->query('//*[@id="js-listing-description"]')->item(0)->nodeValue;
+        $contact_name = trim(str_replace("\n", '', $xpath->query('//*[@class="panel bg-lightest-gray padding-vertical-10 margin-bottom-5"]/p')->item(0)->nodeValue));
+        $contact = $xpath->query('//*[@class="panel bg-lightest-gray padding-vertical-10 margin-bottom-5"]/p')->item(2)->nodeValue;
+        $get_phone = get_phone($contact);
+        $image = $xpath->query('//*[@class="loading-spinner-bg gtm-carousel-image"]/img');
+
+        $convert_description = '<p style="font-size:16px">' . str_replace("'", "''", $description) . '</p>';
+        if (!is_numeric($get_square)) {
+            $get_square = 0;
+        }
+        if (!is_numeric($get_bedroom)) {
+            $get_bedroom = 0;
+        }
+        if (!is_numeric($get_bathroom)) {
+            $get_bathroom = 0;
+        }
+        foreach ($image as $i) {
+            $img[] = $i->getAttribute('data-src');
+            if (strpos($img[0], 'images.estately') !== false) {
+                $get_img[] = $i->getAttribute('data-src');
+            } else {
+                $link_img = 'https://estately.com';
+                $get_img[] = $link_img . $i->getAttribute('data-src');
+            }
+        }
+        $get_floor = 0;
+        $array = [];
+        $array = [
+            'name' => $info_name,
+            'price' => $get_price,
+            'location' => $get_location,
+            'phone' => $get_phone,
+            'img' => $get_img,
+            'description' => $convert_description,
+            'info' => $get_info
+        ];
+        // Set the content type to JSON to get JSON value
+        header('Content-Type: application/json');
+        // // Output the array as JSON
+        echo json_encode($array);
+    };
     if ($array) {
         // Download img to file 
         $get_row_img = [];
@@ -414,6 +465,11 @@ function processResponse($response)
             $result_location = mysqli_query($conn, $sql_location);
             $row_location = mysqli_fetch_assoc($result_location);
             $location_id = $row_location['id'];
+        } elseif (strpos($_POST['href'], 'estately') !== false) {
+            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = 'USA'";
+            $result_location = mysqli_query($conn, $sql_location);
+            $row_location = mysqli_fetch_assoc($result_location);
+            $location_id = $row_location['id'];
         } else {
             $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = '$location_city'";
             $result_location = mysqli_query($conn, $sql_location);
@@ -447,10 +503,20 @@ function processResponse($response)
         $banner_id = $row_banner['id'];
 
         if ($row_check_space) {
-            // echo 'Estate Exist';
+            // TODO: Delete this
+            // $title = $row_check_space['title'];
+            // // echo 'Estate Exist';
+            // $add_mail = "UPDATE bravo_spaces SET mail = '$mail' WHERE title = '$title'";
+            // if($conn->query($add_mail)){
+            //     echo 'done';
+            // }else{
+            //     echo "Error: $add_mail " . mysqli_error($conn);
+
+            // }
         } else {
+            $get_phone = str_replace(' ', '', $get_phone);
             $post_date = date('Y-m-d H:m:s');
-            $sql_space = "INSERT INTO bravo_spaces (title, slug, content, image_id, banner_image_id, location_id, address, map_lat, map_lng, map_zoom, gallery, price, bed, bathroom, square, max_guests, contact, contact_name, created_at, updated_at, status) VALUES ('$info_name', '$convert_slug', '$convert_description', '$banner_img', '$banner_id', '$location_id', '$get_location', '', '', 12, '$convert_row_img', '$get_number', '$get_bedroom', '$get_bathroom', '$get_square', '$get_floor', '$get_phone', '$contact_name', '$post_date', '$post_date', 'publish')";
+            $sql_space = "INSERT INTO bravo_spaces (title, slug, content, image_id, banner_image_id, location_id, address, map_lat, map_lng, map_zoom, gallery, price, bed, bathroom, square, max_guests, contact, contact_name, mail, created_at, updated_at, status) VALUES ('$info_name', '$convert_slug', '$convert_description', '$banner_img', '$banner_id', '$location_id', '$get_location', '', '', 12, '$convert_row_img', '$get_number', '$get_bedroom', '$get_bathroom', '$get_square', '$get_floor', '$get_phone', '$contact_name', '$mail','$post_date', '$post_date', 'publish')";
             // var_dump($sql_space);die;
             if (mysqli_query($conn, $sql_space)) {
                 // echo "Real_estate Added";

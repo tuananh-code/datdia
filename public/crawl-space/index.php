@@ -73,7 +73,7 @@ $result = $conn->query($sql);
                 </div>
                 <div class='m-2'>
                     <label for="pageOption">Nhập Url Page</label>
-                    <input class="form-control" type="text" placeholder="Nhập Url Page" value="#page=" id='pageOption' name='pageOption'>
+                    <input class="form-control" type="text" placeholder="Nhập Url Page" value="?page=" id='pageOption' name='pageOption'>
                 </div>
                 <div class='m-2'>
                     <label for="xPath">Nhập XPath</label>
