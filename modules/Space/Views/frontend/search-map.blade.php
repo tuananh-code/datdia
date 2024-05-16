@@ -20,7 +20,7 @@
             content: '';
             position: absolute;
             top: 60%;
-            left: 34%;
+            left: 36%;
             width: 0;
             height: 0;
             border-left: 8px solid transparent;

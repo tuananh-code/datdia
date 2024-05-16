@@ -1096,7 +1096,6 @@ class Space extends Bookable
             $limit = !empty(setting_item("space_page_limit_item")) ? setting_item("space_page_limit_item") : 9;
         }
         // dd($model_space->with(['location', 'hasWishList', 'translations'])->paginate($limit));
-
         return $model_space->with(['location', 'hasWishList', 'translations'])->paginate($limit);
     }
 

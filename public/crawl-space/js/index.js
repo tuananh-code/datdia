@@ -60,11 +60,11 @@ $(document).on("click", "#getValue", function (e) {
     //     for (var l = 0; l < 1; l++) {
     console.log("ok");
     //TODO: for century21
-    var link = "https://www.estately.com/NY/New_York";
+    var link = "https://www.estately.com/WA/Seattle";
     // FIXME: Using recursive remove function to get original
     var i = 1;
     function processNext() {
-        if (i <= 2) {
+        if (i <= 9) {
             var getUrl = link + pageOption + i;
             // var getUrl = link + pageOption + i + option;
             console.log(getUrl);
