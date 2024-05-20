@@ -7,7 +7,7 @@ $mail = $vendor->email;
 ?>
 @if (!empty($vendor->id))
     {{-- Contact --}}
-    <div class="owner-info widget-box">
+    <div class="owner-info widget-box sticky-user">
         <div class="media">
             <div class="media-left">
                 <a href="{{ route('user.profile', ['id' => $vendor->user_name ?? $vendor->id]) }}" target="_blank"

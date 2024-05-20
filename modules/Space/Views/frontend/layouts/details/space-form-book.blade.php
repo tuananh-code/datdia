@@ -5,7 +5,7 @@
     $phone = $vendor->phone;
     $mail = $vendor->email;
 @endphp
-<div class="bravo_single_book_wrap">
+<div class="bravo_single_book_wrap @if ($name) sticky-contact @else sticky-user @endif">
     <div class="bravo_single_book">
         <div id="bravo_space_book_app" v-cloak>
             @if ($row->discount_percent)

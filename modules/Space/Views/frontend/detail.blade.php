@@ -1,8 +1,23 @@
 @extends('layouts.app')
 @section('head')
-    <link href="{{ asset('dist/frontend/module/space/css/space.css?_ver='  .config('app.version')) }}" rel="stylesheet">
+    <link href="{{ asset('dist/frontend/module/space/css/space.css?_ver=' . config('app.version')) }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('libs/ion_rangeslider/css/ion.rangeSlider.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('libs/fotorama/fotorama.css') }}" />
+    <style>
+        .relative {
+            position: relative;
+        }
+
+        .sticky-user {
+            position: sticky;
+            top: .5em
+        }
+
+        .sticky-contact {
+            position: sticky;
+            top: 8em
+        }
+    </style>
 @endsection
 @section('content')
     <div class="bravo_detail_space">
@@ -15,7 +30,7 @@
                         @include('Space::frontend.layouts.details.space-detail')
                         @include('Space::frontend.layouts.details.space-review')
                     </div>
-                    <div class="col-md-12 col-lg-3">
+                    <div class="col-md-12 col-lg-3 relative">
                         @include('Tour::frontend.layouts.details.vendor')
                         @include('Space::frontend.layouts.details.space-form-book')
                     </div>

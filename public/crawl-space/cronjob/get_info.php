@@ -484,9 +484,9 @@ function processResponse_info($response, $url, $get_name, $get_address, $get_bed
                     }
                 }
                 $location_id = $row_location['id'];
-                $sql_check_space = "SELECT * FROM `bravo_spaces` WHERE title = '$info_name'";
-                $result_check_space = mysqli_query($conn, $sql_check_space);
-                $row_check_space = mysqli_fetch_assoc($result_check_space);
+                // $sql_check_space = "SELECT * FROM `bravo_spaces` WHERE title = '$info_name'";
+                // $result_check_space = mysqli_query($conn, $sql_check_space);
+                // $row_check_space = mysqli_fetch_assoc($result_check_space);
 
                 //Select id banner image
                 $sql_banner = "SELECT id FROM `media_files` WHERE file_name = 'banner-trang-chu'";
@@ -494,19 +494,20 @@ function processResponse_info($response, $url, $get_name, $get_address, $get_bed
                 $row_banner = mysqli_fetch_assoc($result_banner);
                 $banner_id = $row_banner['id'];
 
-                if ($row_check_space) {
-                    // echo 'Estate Exist';
+                // if ($row_check_space) {
+                // echo 'Estate Exist';
+                // } else {
+                $get_phone = str_replace(' ', '', $get_phone);
+                $post_date = date('Y-m-d H:m:s');
+                $sql_space = "INSERT IGNORE INTO bravo_spaces (title, slug, content, image_id, banner_image_id, location_id, address, map_lat, map_lng, map_zoom, gallery, price, bed, bathroom, square, max_guests, contact, contact_name, created_at, updated_at, status) SELECT '$info_name', '$convert_slug', '$convert_description', '$banner_img', '$banner_id', '$location_id', '$get_location', '', '', 12, '$convert_row_img', '$get_number', '$get_bedroom', '$get_bathroom', '$get_square', '$get_floor', '$get_phone', '$contact_name', '$post_date', '$post_date', 'publish' FROM dual WHERE NOT EXISTS ( SELECT title FROM bravo_spaces WHERE title = '$info_name') LIMIT 1";
+
+                // var_dump($sql_space);die;
+                if (mysqli_query($conn, $sql_space)) {
+                    // echo "Real_estate Added";
                 } else {
-                    $get_phone = str_replace(' ', '', $get_phone);
-                    $post_date = date('Y-m-d H:m:s');
-                    $sql_space = "INSERT INTO bravo_spaces (title, slug, content, image_id, banner_image_id, location_id, address, map_lat, map_lng, map_zoom, gallery, price, bed, bathroom, square, max_guests, contact, contact_name, created_at, updated_at, status) VALUES ('$info_name', '$convert_slug', '$convert_description', '$banner_img', '$banner_id', '$location_id', '$get_location', '', '', 12, '$convert_row_img', '$get_number', '$get_bedroom', '$get_bathroom', '$get_square', '$get_floor', '$get_phone', '$contact_name', '$post_date', '$post_date', 'publish')";
-                    // var_dump($sql_space);die;
-                    if (mysqli_query($conn, $sql_space)) {
-                        // echo "Real_estate Added";
-                    } else {
-                        echo "Error: $sql_space " . mysqli_error($conn);
-                    }
+                    echo "Error: $sql_space " . mysqli_error($conn);
                 }
+                // }
                 mysqli_close($conn);
             }
             lat_long_convert($get_location, true);
