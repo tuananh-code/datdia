@@ -110,7 +110,7 @@
             @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
             {{ $location->name ?? '' }}
         @endif
-        @php $date = date('Y-m-d', strtotime($row->created_at)) @endphp
+        @php $date = date('m-d', strtotime($row->created_at)) @endphp
         {{ $date }}
     </div>
     @if (setting_item('space_enable_review'))

@@ -161,7 +161,7 @@
                 <h6>{{ $location->name ?? '' }}</h6>
             @endif
         @endif
-        @php $date = date('Y-m-d', strtotime($row->created_at)) @endphp
+        @php $date = date('m-d', strtotime($row->created_at)) @endphp
         <h6>{{ $date }}</h6>
     </div>
     @if (setting_item('space_enable_review'))
