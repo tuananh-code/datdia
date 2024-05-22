@@ -133,7 +133,7 @@
             <div class="sale_info">{{ $row->discount_percent }}</div>
         @endif
     </div>
-    <div class="location">
+    <div class="location d-flex justify-content-between">
         @if ($current_path)
             @if (!empty($row->location->name))
                 @php
@@ -161,6 +161,8 @@
                 <h6>{{ $location->name ?? '' }}</h6>
             @endif
         @endif
+        @php $date = date('Y-m-d', strtotime($row->created_at)) @endphp
+        <h6>{{ $date }}</h6>
     </div>
     @if (setting_item('space_enable_review'))
         <?php
@@ -186,22 +188,22 @@
         <div class="amenities">
             {{-- Set all attribute --}}
             @if ($row->max_guests)
-                <span class="amenity total" data-toggle="tooltip" title="{{__('Max Guests')}}">
+                <span class="amenity total" data-toggle="tooltip" title="{{ __('Floors') }}">
                     <i class="input-icon field-icon icofont-building-alt"></i> {{ $row->max_guests }}
                 </span>
             @endif
             @if ($row->bed)
-                <span class="amenity bed" data-toggle="tooltip" title="{{__('Beds')}}">
+                <span class="amenity bed" data-toggle="tooltip" title="{{ __('Beds') }}">
                     <i class="input-icon field-icon icofont-hotel"></i> {{ $row->bed }}
                 </span>
             @endif
             @if ($row->bathroom)
-                <span class="amenity bath" data-toggle="tooltip" title="{{__('Bathrooms')}}">
+                <span class="amenity bath" data-toggle="tooltip" title="{{ __('Bathrooms') }}">
                     <i class="input-icon field-icon icofont-bathtub"></i> {{ $row->bathroom }}
                 </span>
             @endif
             @if ($row->square)
-                <span class="amenity size" data-toggle="tooltip" title="{{__('Square')}}">
+                <span class="amenity size" data-toggle="tooltip" title="{{ __('Square') }}">
                     <i class="input-icon field-icon icofont-ruler-compass-alt"></i> {!! size_unit_format($row->square) !!}
                 </span>
             @endif

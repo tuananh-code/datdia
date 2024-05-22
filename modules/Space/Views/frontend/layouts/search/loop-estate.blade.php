@@ -42,7 +42,7 @@
                         @endphp
                         @foreach (explode(',', $row->gallery) as $key => $img)
                             <div class="carousel-item  h-100 @if (!$key) active @endif">
-                                <a @if (!empty($blank)) @endif
+                                <a @if (!empty($blank))  @endif
                                     href="{{ $row->getDetailUrl($include_param ?? true) }}">
                                     {{-- Get img show --}}
                                     {!! get_image_tag_s3($img, 'medium', ['class' => 'img-responsive d-block', 'alt' => $row->title]) !!}
@@ -95,8 +95,7 @@
         </div>
     </div>
     <div class="item-title">
-        <a @if (!empty($blank)) @endif
-            href="{{ $row->getDetailUrl($include_param ?? true) }}">
+        <a @if (!empty($blank))  @endif href="{{ $row->getDetailUrl($include_param ?? true) }}">
             @if ($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>
             @endif
@@ -106,11 +105,13 @@
             <div class="sale_info">{{ $row->discount_percent }}</div>
         @endif
     </div>
-    <div class="location">
+    <div class="location d-flex justify-content-between">
         @if (!empty($row->location->name))
             @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
             {{ $location->name ?? '' }}
         @endif
+        @php $date = date('Y-m-d', strtotime($row->created_at)) @endphp
+        {{ $date }}
     </div>
     @if (setting_item('space_enable_review'))
         <?php
@@ -135,22 +136,22 @@
     <div class="amenities">
         {{-- Set all attribute --}}
         @if ($row->max_guests)
-            <span class="amenity total" data-toggle="tooltip" title="Số tầng">
+            <span class="amenity total" data-toggle="tooltip" title="{{ __('Floors') }}">
                 <i class="input-icon field-icon icofont-building-alt"></i> {{ $row->max_guests }}
             </span>
         @endif
         @if ($row->bed)
-            <span class="amenity bed" data-toggle="tooltip" title="Phòng ngủ">
+            <span class="amenity bed" data-toggle="tooltip" title="{{ __('Beds') }}">
                 <i class="input-icon field-icon icofont-hotel"></i> {{ $row->bed }}
             </span>
         @endif
         @if ($row->bathroom)
-            <span class="amenity bath" data-toggle="tooltip" title="Toilet">
+            <span class="amenity bath" data-toggle="tooltip" title="{{ __('Bathrooms') }}">
                 <i class="input-icon field-icon icofont-bathtub"></i> {{ $row->bathroom }}
             </span>
         @endif
         @if ($row->square)
-            <span class="amenity size" data-toggle="tooltip" title="Diện tích đất">
+            <span class="amenity size" data-toggle="tooltip" title="{{ __('Square') }}">
                 <i class="input-icon field-icon icofont-ruler-compass-alt"></i> {!! size_unit_format($row->square) !!}
             </span>
         @endif

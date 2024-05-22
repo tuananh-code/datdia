@@ -98,7 +98,7 @@
                 {{-- TODO: Add from content --}}
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label">{{ __('Max Guests') }}</label>
+                        <label class="control-label">{{ __('Floors') }}</label>
                         <input type="number" step="any" name="max_guests" class="form-control" placeholder="{{ __('Example: 3') }}"
                             value="{{ $row->max_guests }}">
                     </div>
