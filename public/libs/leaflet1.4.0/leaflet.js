@@ -3895,7 +3895,8 @@
                 var space = '/space';
                 var owner = '/owner';
                 var en = '/en';
-                if(window.location.pathname == space || window.location.pathname.includes(owner) || window.location.pathname.includes(en)){
+                var vi ='/vi';
+                if(window.location.pathname == space || window.location.pathname.includes(owner) || window.location.pathname.includes(en) || window.location.pathname.includes(vi)){
                     return (i = i || document.createElement("div")), (i.innerHTML = t), i;
                 }else{
                     return (i = i || document.createElement("img")), (i.src = t), i;
