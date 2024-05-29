@@ -6,7 +6,6 @@
         <div class="bravo-list-item">
             <div class="topbar-search">
                 <h2 class="text">
-
                     @if ($rows->total() > 1)
                         Tìm thấy {{ ['count' => $rows->total()]['count'] }} kết quả
                         {{-- {{ __(":count spaces found",['count'=>$rows->total()]) }}  --}}

@@ -4,6 +4,7 @@ use Modules\Core\Models\Settings;
 use App\Currency;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 //include '../../custom/Helpers/CustomHelper.php';
 
@@ -1202,6 +1203,84 @@ function format_interval($d1, $d2 = '')
     return $result;
 }
 
+function ApiConvert($baseCurrency)
+{
+    $apiKey = 'abd15f4d5fefbc7cc2cfa5b9';
+    $targetCurrency = 'USD';
+    $amount = 1; // Amount to convert
+    $baseUrl = 'https://v6.exchangerate-api.com/v6';
+
+    // Construct the API URL
+    $url = "{$baseUrl}/{$apiKey}/latest/{$baseCurrency}";
+
+    // Initialize cURL session
+    $ch = curl_init($url);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    // Execute cURL request
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if ($response === FALSE) {
+        $error = 'cURL Error: ' . curl_error($ch);
+        return $error;
+    }
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Decode the JSON response
+    $data = json_decode($response, true);
+    if ($data['result'] === 'error') {
+        $error = 'Error: ' . $data['error-type'];
+        return $error;
+    }
+    // Get the conversion rate
+    $conversionRate = $data['conversion_rates'][$targetCurrency];
+    // Perform the conversion
+    $convertedAmount = $amount * $conversionRate;
+    return $convertedAmount;
+}
+function convertToUSD($location_id)
+{
+    if ($location_id > 8 && $location_id < 73) {
+        $baseCurrency = 'VND';
+        $country = 'Việt Nam';
+        // $date = '2024-05-28';
+        $date = date('Y-m-d');
+        $results = DB::table('api_convert')
+            ->where('country', $country)
+            ->where('created_at', 'LIKE', '%' . $date . '%')
+            ->get();
+        $rate = @$results[0]->convert_rate;
+        if (!$rate) {
+            $result_api = DB::table('api_convert')
+                ->where('country', $country)
+                ->get();
+            $rate = $result_api[0]->convert_rate;
+            $convert_rate = ApiConvert($baseCurrency);
+            if (!strpos($convert_rate, 'Error')) {
+                $data = [
+                    'convert_rate' => $convert_rate,
+                    'created_at' => $date
+                ];
+                DB::table('api_convert')
+                    ->where('country', $country)
+                    ->update($data);
+                $convert = $convert_rate;
+            } else {
+                $convert = $rate;
+            }
+        } else {
+            $convert = $rate;
+        }
+    } else {
+        $convert = null;
+    }
+    return $convert;
+}
 function formatNumberToVietnamese($number, $location_id)
 {
     // $number = 6800000000;
@@ -1239,7 +1318,7 @@ function formatNumberToVietnamese($number, $location_id)
             }
         }
     }
-    return ($formatted_price);
+    return $formatted_price;
 }
 
 function formatNumberToVietnameseRound($number, $location_id)
@@ -1289,13 +1368,49 @@ function formatNumberToVietnameseRound($number, $location_id)
             }
         }
     }
-    return ($formatted_price);
+    return $formatted_price;
 }
 
+function formatToUSD($number)
+{
+    $formatted_price = number_format($number, 0, ',', '');
+    $format_price = intval($formatted_price);
+    $billion = floor($format_price / 1000000000);
+    $million = floor(($format_price % 1000000000) / 100000000);
+    $m = floor(($format_price % 1000000000) / 1000000);
+    $t = number_format($format_price / 1000000, 2);
+    $k = number_format($format_price / 1000, 0);
+    if ($t < 1  && $k > 0) {
+        $formatted_price = number_format($format_price);
+    } else {
+        if ($billion == 0 && $million == 0) {
+            $formatted_price = $t . 'M';
+        } else {
+            if ($billion > 0 && $million == 0) {
+                $formatted_price = number_format($billion) . 'B';
+            } else {
+                if ($billion == 0 && $million > 0) {
+                    $formatted_price = $t . 'M';
+                } elseif ($million > 0) {
+                    $formatted_price = $billion . ',' . $million . 'B';
+                } else {
+                    $formatted_price = $billion . ',0' . $million . 'B';
+                }
+            }
+        }
+    }
+    return $formatted_price;
+}
 function serverPath()
 {
     $current_path = $_SERVER['REQUEST_URI'];
     $check_path = strpos($current_path, 'owner');
+    return $check_path;
+}
+function serverVN()
+{
+    $current_path = $_SERVER['REQUEST_URI'];
+    $check_path = strpos($current_path, 'vi');
     return $check_path;
 }
 function estatePath()

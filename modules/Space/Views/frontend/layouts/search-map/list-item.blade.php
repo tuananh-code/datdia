@@ -2,11 +2,15 @@
     @if ($rows->count())
         <div class="text-paginate">
             <h2 class="text">
-
-                @if ($rows->total() > 1)
-                    {{ __(':count spaces found', ['count' => $rows->total()]) }}
+                {{-- @dd(serverVN()) --}}
+                @if (serverVN())
+                    Tìm thấy: {{ ['total' => $rows->total()]['total'] }} kết quả
                 @else
-                    {{ __(':count space found', ['count' => $rows->total()]) }}
+                    @if ($rows->total() > 1)
+                        {{ __(':count estates found', ['count' => $rows->total()]) }}
+                    @else
+                        {{ __(':count space found', ['count' => $rows->total()]) }}
+                    @endif
                 @endif
             </h2>
             <span class="count-string">Từ {{ ['from' => $rows->firstItem()]['from'] }} -

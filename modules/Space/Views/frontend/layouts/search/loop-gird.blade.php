@@ -6,6 +6,8 @@
     $name = $vendor->user_name;
     $phone = $vendor->phone;
     $mail = $vendor->email;
+    $convert = convertToUSD($row->location_id);
+    $number = number_format(convertToUSD($row->location_id), 10, '.', '');
 @endphp
 <div class="item-loop {{ $wrap_class ?? '' }}">
     @if ($row->is_featured == '1')
@@ -18,7 +20,8 @@
             <div class="carousel-inner h-100">
                 {{-- Fix map show slide img --}}
                 <div class="carousel-item h-100 active">
-                    <a @if (!empty($blank))  @endif target="_blank" href="{{ $row->getDetailUrl($include_param ?? true) }}">
+                    <a @if (!empty($blank))  @endif target="_blank"
+                        href="{{ $row->getDetailUrl($include_param ?? true) }}">
                         <img src="{{ get_file_url_s3($row->image_id) }}" class="img-responsive"
                             alt="Trang thương mại điện tử bất động sản datdia">
                         {{ $row->title }}
@@ -97,6 +100,9 @@
                         <span class="text-price">
                             {{-- {{ $row->display_price }} --}}
                             {{ formatNumberToVietnamese($row->price, $row->location_id) }}
+                            @if ($convert)
+                                ~ ${{ formatToUSD($row->price * $number) }}
+                            @endif
                         </span>
                     @endif
                     {{-- Turn off set day --}}
@@ -114,7 +120,8 @@
         </div>
     </div>
     <div class="item-title">
-        <a @if (!empty($blank)) target="_blank" @endif href="{{ $row->getDetailUrl($include_param ?? true) }}">
+        <a @if (!empty($blank)) target="_blank" @endif
+            href="{{ $row->getDetailUrl($include_param ?? true) }}">
             @if ($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>
             @endif
