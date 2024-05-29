@@ -4,6 +4,8 @@
     $business = $vendor->business_name;
     $phone = $vendor->phone;
     $mail = $vendor->email;
+    $convert = convertToUSD($row->location_id);
+    $number = number_format(convertToUSD($row->location_id), 10, '.', '');
 @endphp
 <div class="bravo_single_book_wrap @if ($name) sticky-contact @else sticky-user @endif">
     <div class="bravo_single_book">
@@ -29,6 +31,9 @@
                             <span class="onsale">{{ $row->display_sale_price }}</span>
                             <span class="text-lg">
                                 {{ formatNumberToVietnamese($row->price, $row->location_id) }}
+                                @if ($convert)
+                                    ~ ${{ formatToUSD($row->price * $number) }}
+                                @endif
                             </span>
                         @endif
                     </span>

@@ -3,14 +3,16 @@
     $name = $vendor->user_name;
     $phone = $vendor->phone;
     $mail = $vendor->email;
+    $convert = convertToUSD($row->location_id);
+    $number = number_format(convertToUSD($row->location_id), 10, '.', '');
 @endphp
 <div class="bravo-more-book-mobile" style="z-index: 1234">
-    <div class="container" style="height: 80px">
+    <div class="container" style="height: 100px">
         <div class="left" style="max-width: 44%">
             <div class="g-price">
-                <div class="prefix">
-                    {{-- <span class="fr_text">{{__("from")}}</span> --}}
-                </div>
+                {{-- <div class="prefix">
+                    <span class="fr_text">{{__("from")}}</span>
+                </div> --}}
                 <div class="price">
                     {{-- <span class="label">
                         {{__("from")}}
@@ -26,6 +28,9 @@
                             <span class="onsale">{{ $row->display_sale_price }}</span>
                             <span class="text-price">
                                 {{ formatNumberToVietnamese($row->price, $row->location_id) }}
+                                @if ($convert)
+                                    ~ ${{ formatToUSD($row->price * $number) }}
+                                @endif
                             </span>
                         @endif
                     </span>
@@ -65,7 +70,7 @@
                 </div>
             @endif
         </div>
-        <div class="right mt-2" style="max-width: 56%">
+        <div class="right mb-2" style="max-width: 56%">
             @if ($row->mail)
                 <div class="">
                     <p class="m-0">{{ $row->contact_name }}</p>
