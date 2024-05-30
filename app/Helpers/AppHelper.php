@@ -1348,21 +1348,25 @@ function formatNumberToVietnameseRound($number, $location_id)
             }
         }
     } else {
-        if ($t < 1  && $k > 0) {
-            $formatted_price = $k . 'K';
+        if ($format_price < 1000) {
+            $formatted_price = '$' . $format_price;
         } else {
-            if ($billion == 0 && $million == 0) {
-                $formatted_price = $t . 'M';
+            if ($t < 1  && $k > 0) {
+                $formatted_price = $k . 'K';
             } else {
-                if ($billion > 0 && $million == 0) {
-                    $formatted_price = number_format($billion) . 'B';
+                if ($billion == 0 && $million == 0) {
+                    $formatted_price = $t . 'M';
                 } else {
-                    if ($billion == 0 && $million > 0) {
-                        $formatted_price = $t . 'M';
-                    } elseif ($million > 0) {
-                        $formatted_price = $billion . ',' . $million . 'B';
+                    if ($billion > 0 && $million == 0) {
+                        $formatted_price = number_format($billion) . 'B';
                     } else {
-                        $formatted_price = $billion . ',0' . $million . 'B';
+                        if ($billion == 0 && $million > 0) {
+                            $formatted_price = $t . 'M';
+                        } elseif ($million > 0) {
+                            $formatted_price = $billion . ',' . $million . 'B';
+                        } else {
+                            $formatted_price = $billion . ',0' . $million . 'B';
+                        }
                     }
                 }
             }
