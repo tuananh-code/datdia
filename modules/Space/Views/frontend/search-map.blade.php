@@ -31,13 +31,20 @@
     </style>
 @endsection
 @section('content')
+    @php
+        // $current_path = serverPath();
+        $estate_path = estatePath();
+    @endphp
     <div class="bravo_search_tour bravo_search_space">
         <h1 class="d-none">
             {{ setting_item_with_lang('space_page_search_title') }}
         </h1>
-        <div class="bravo_form_search_map">
-            @include('Space::frontend.layouts.search-map.form-search-map')
-        </div>
+        @if (!$estate_path)
+            <div class="bravo_form_search_map">
+                @include('Space::frontend.layouts.search-map.form-search-map')
+            </div>
+        @endif
+
         <div class="bravo_search_map {{ setting_item_with_lang('space_layout_map_option', false, 'map_left') }}">
             <div class="results_map">
                 <div class="map-loading d-none">
@@ -49,10 +56,7 @@
                 @include('Space::frontend.layouts.search-map.advance-filter')
                 <div class="listing_items">
                     {{-- Filter result --}}
-                    @php
-                        // $current_path = serverPath();
-                        $estate_path = estatePath();
-                    @endphp
+
                     @if ($estate_path)
                         @include('Space::frontend.layouts.search-map.list-estate')
                     @else
