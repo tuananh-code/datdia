@@ -1405,16 +1405,16 @@ function formatToUSD($number)
     }
     return $formatted_price;
 }
-function serverPath()
-{
-    $current_path = $_SERVER['REQUEST_URI'];
-    $check_path = strpos($current_path, 'owner');
-    return $check_path;
-}
 function serverVN()
 {
     $current_path = $_SERVER['REQUEST_URI'];
     $check_path = strpos($current_path, 'vi');
+    return $check_path;
+}
+function serverPath()
+{
+    $current_path = $_SERVER['REQUEST_URI'];
+    $check_path = strpos($current_path, 'owner');
     return $check_path;
 }
 function estatePath()
@@ -1424,8 +1424,8 @@ function estatePath()
     if ($position !== false) {
         // Check if there are characters after "owner/"
         $number = substr($current_path, $position + strlen("owner/"));
-        if ($number) {
-            // if (is_numeric($number)) {
+        // if ($number) {
+        if (is_numeric($number)) {
             $check = true;
         } else {
             $check = false;

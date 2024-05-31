@@ -10,7 +10,7 @@ Route::group(['prefix' => config('space.space_route_prefix')], function () {
 Route::group(['prefix' => config('owner.owner_route_prefix')], function () {
     Route::get('/', 'OwnerController@index');
     Route::get('/{contact}', 'OwnerController@estate'); // Detail
-    Route::get('/{slug}', 'OwnerController@detail'); // Detail
+    // Route::get('/{slug}', 'OwnerController@detail'); // Detail
 });
 
 

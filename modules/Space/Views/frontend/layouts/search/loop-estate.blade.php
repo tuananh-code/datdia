@@ -95,7 +95,8 @@
         </div>
     </div>
     <div class="item-title">
-        <a @if (!empty($blank))  @endif target="_blank" href="{{ $row->getDetailUrl($include_param ?? true) }}">
+        <a @if (!empty($blank))  @endif target="_blank"
+            href="{{ $row->getDetailUrl($include_param ?? true) }}">
             @if ($row->is_instant)
                 <i class="fa fa-bolt d-none"></i>
             @endif
@@ -108,10 +109,10 @@
     <div class="location d-flex justify-content-between">
         @if (!empty($row->location->name))
             @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
-            {{ $location->name ?? '' }}
+            <h6>{{ $location->name ?? '' }}</h6>
         @endif
         @php $date = date('m-d', strtotime($row->created_at)) @endphp
-        {{ $date }}
+        <h6>{{ $date }}</h6>
     </div>
     @if (setting_item('space_enable_review'))
         <?php
