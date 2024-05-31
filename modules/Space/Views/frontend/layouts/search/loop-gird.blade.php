@@ -3,7 +3,7 @@
     $current_path = serverPath();
     $estate_path = estatePath();
     $vendor = $row->author;
-    $name = $vendor->user_name;
+    $name = $vendor->business_name ? $vendor->business_name : $vendor->user_name;
     $phone = $vendor->phone;
     $mail = $vendor->email;
     $convert = convertToUSD($row->location_id);
