@@ -203,7 +203,7 @@ jQuery(function ($) {
     });
     $(".bravo-box-category-tour").each(function () {
         $(this).find(".owl-carousel").owlCarousel({
-            items: 4,
+            items: 3,
             loop: true,
             margin: 30,
             nav: false,
@@ -216,7 +216,7 @@ jQuery(function ($) {
                     items: 2
                 },
                 1000: {
-                    items: 4
+                    items: 3
                 }
             }
         })
@@ -254,7 +254,7 @@ jQuery(function ($) {
 
     $(".bravo-list-space").each(function () {
         $(this).find(".owl-carousel").owlCarousel({
-            items: 3,
+            items: 4,
             loop: false,
             margin: 15,
             nav: false,
@@ -266,7 +266,7 @@ jQuery(function ($) {
                     items: 2
                 },
                 1000: {
-                    items: 3
+                    items: 4
                 }
             }
         })

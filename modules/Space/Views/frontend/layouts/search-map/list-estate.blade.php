@@ -97,8 +97,11 @@
                                         {{ __(':number Review', ['number' => $reviewData['total_review']]) }}
                                     @endif
                                 @else
-                                    {{ __(':number Review') }}: 0
-
+                                    @if (serverVN())
+                                        {{ __(':number Review') }}: 0
+                                    @else
+                                        Number Review: 0
+                                    @endif
                                 @endif
                             </span>
                         </div>

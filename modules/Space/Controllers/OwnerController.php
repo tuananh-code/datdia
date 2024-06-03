@@ -76,7 +76,7 @@ class OwnerController extends Controller
                 ];
             }
         }
-        $limit_location = 15;
+        $limit_location = 1000;
         if (empty(setting_item("space_location_search_style")) or setting_item("space_location_search_style") == "normal") {
             $limit_location = 1000;
         }
@@ -163,7 +163,7 @@ class OwnerController extends Controller
                 ];
             }
         }
-        $limit_location = 15;
+        $limit_location = 1000;
         if (empty(setting_item("space_location_search_style")) or setting_item("space_location_search_style") == "normal") {
             $limit_location = 1000;
         }

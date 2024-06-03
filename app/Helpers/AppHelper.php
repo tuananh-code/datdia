@@ -1234,7 +1234,7 @@ function ApiConvert($baseCurrency)
     // Decode the JSON response
     $data = json_decode($response, true);
     if ($data['result'] === 'error') {
-        $error = 'Error: ' . $data['error-type'];
+        $error = 'API Error: ' . $data['error-type'];
         return $error;
     }
     // Get the conversion rate
@@ -1409,6 +1409,12 @@ function serverVN()
 {
     $current_path = $_SERVER['REQUEST_URI'];
     $check_path = strpos($current_path, 'vi');
+    return $check_path;
+}
+function serverEN()
+{
+    $current_path = $_SERVER['REQUEST_URI'];
+    $check_path = strpos($current_path, 'en');
     return $check_path;
 }
 function serverPath()

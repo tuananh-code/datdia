@@ -6,15 +6,32 @@
                 @if (serverVN())
                     Tìm thấy: {{ ['total' => $rows->total()]['total'] }} kết quả
                 @else
-                    @if ($rows->total() > 1)
-                        {{ __(':count estates found', ['count' => $rows->total()]) }}
+                    @if (serverPath())
+                        {{ ['total' => $rows->total()]['total'] }} agents found
                     @else
-                        {{ __(':count space found', ['count' => $rows->total()]) }}
+                        @if ($rows->total() > 1)
+                            {{ __(':count estates found', ['count' => $rows->total()]) }}
+                        @else
+                            {{ __(':count space found', ['count' => $rows->total()]) }}
+                        @endif
                     @endif
                 @endif
             </h2>
-            <span class="count-string">Từ {{ ['from' => $rows->firstItem()]['from'] }} -
-                {{ ['to' => $rows->lastItem()]['to'] }} trên {{ ['total' => $rows->total()]['total'] }} Kết quả</span>
+            @if (serverVN())
+                <span class="count-string">Từ {{ ['from' => $rows->firstItem()]['from'] }} -
+                    {{ ['to' => $rows->lastItem()]['to'] }} trên {{ ['total' => $rows->total()]['total'] }} Kết
+                    quả</span>
+            @else
+                {{-- @if (serverEN()) --}}
+                <span class="count-string">From {{ ['from' => $rows->firstItem()]['from'] }} -
+                    {{ ['to' => $rows->lastItem()]['to'] }} of {{ ['total' => $rows->total()]['total'] }}
+                    results</span>
+                {{-- @else --}}
+                {{-- <span class="count-string">Từ {{ ['from' => $rows->firstItem()]['from'] }} - --}}
+                {{-- {{ ['to' => $rows->lastItem()]['to'] }} trên {{ ['total' => $rows->total()]['total'] }} Kết --}}
+                {{-- quả</span> --}}
+                {{-- @endif --}}
+            @endif
         </div>
         <div class="list-item">
             <div class="row">
