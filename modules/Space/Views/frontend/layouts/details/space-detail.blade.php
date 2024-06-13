@@ -17,7 +17,8 @@
                             {{-- Set in vi.json file đổi ngôn ngữ --}}
                             <span class="head-rating">{{ $review_score['score_text'] }}</span>
                             <span
-                                class="text-rating">{{ __('from :number reviews', ['number' => $review_score['total_review']]) }}</span>
+                                class="text-rating">{{ __('from :number reviews', ['number' => $review_score['total_review']]) }}
+                            </span>
                         </div>
                         <div class="score">
                             {{ $review_score['score_total'] }}<span>/5</span>

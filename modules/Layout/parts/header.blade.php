@@ -19,7 +19,6 @@
                     <div class="d-flex align-items-center">
                         <?php 
                             generate_menu('primary');
-
                             if(is_admin()){
                                 echo "<div>
                                         <a class='btn-success p-2 btn' style='font-weight:bold' target='_blank' href='http://datdia.com/crawl-space'> Crawl Space </a>

@@ -56,6 +56,7 @@ class SpaceTermFeaturedBox extends BaseBlock
         }
         $list_term = Terms::whereIn('id',$term_space)->get();
         $model['list_term'] = $list_term;
+        //TODO: uncomment this for original
         return view('Space::frontend.blocks.term-featured-box.index', $model);
     }
 
