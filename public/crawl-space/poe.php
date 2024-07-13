@@ -1,8 +1,8 @@
 <?php
 $getAllUrls = [];
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include_once 'functionVn.php';
-// error_reporting(0);
-// var_dump($_POST);
 function crawl($url, $page)
 {
     // Initialize cURL
@@ -25,7 +25,6 @@ function crawl($url, $page)
         echo 'Error: ' . curl_error($curl);
         return;
     }
-
     // Close cURL
     curl_close($curl);
 
@@ -49,7 +48,7 @@ function processResponse($response)
     libxml_clear_errors();
     // var_dump($response);die;
     $xpath = new DOMXpath($dom);
-    if (strpos($_POST['url'], 'alonhadat') !== false) {
+    if (strpos($_POST['url'], 'alonhadat.com') !== false) {
         $link = 'https://alonhadat.com.vn';
         $pageAjax = intval($_POST['page']);
         $xPathAjax = $xpath->query($_POST['xPath']);
@@ -274,7 +273,7 @@ function processResponse($response)
             $get_bed[] = trim($stat[0]);
             $stat2 = explode('baths', $stat[1]);
             $get_bath[] = trim($stat2[0]);
-            $sqm[] = trim(str_replace(',', '', get_square($stat2[1])[0]));
+            $sqm[] = trim(str_replace(',', '', get_square($stat2[1])[0])) * 0.3;
         }
         $array = [];
         $array = [
@@ -290,6 +289,63 @@ function processResponse($response)
         header('Content-Type: application/json');
         // Output the array as JSON
         echo json_encode($array);
+    } elseif (strpos($_POST['url'], 'edgeprop.sg') !== false) {
+        $content = $xpath->query('//*[@id="__NEXT_DATA__"]')->item(0)->nodeValue;
+        $content = json_decode($content, true);
+        $href = $content['props']['pageProps']['listings']['results']['listings'];
+        foreach ($href as $h) {
+            $url = 'https://www.edgeprop.sg/' . $h['url'];
+            $get_all_href[] = $url;
+        }
+        $price = $xpath->query('//*[@id="searchListing"]/div[3]/div[1]/div[1]/a');
+        $title = $xpath->query('//*[@id="searchListing"]/div[3]/div[2]/div[1]/div/h2');
+        $info = $xpath->query('//*[@id="searchListing"]/div[3]/div[2]/div[2]/span/span');
+        $contact = $xpath->query('//*[@id="searchListing"]/div[3]/div[3]/div[1]/div[2]/div');
+        $sqm = $xpath->query('//*[@id="searchListing"]/div[3]/div[2]/div[3]');
+        for ($i = 0; $i < count($price); $i++) {
+            $get_title[] = $title[$i]->nodeValue;
+            $get_price[] = get_price($price[$i]->nodeValue);
+            preg_match_all('/(\d+)\s*beds/i', $info[$i]->nodeValue, $beds_matches);
+            preg_match_all('/(\d+)\s*baths/i', $info[$i]->nodeValue, $baths_matches);
+            $get_bed[] =  $beds_matches[1][0];
+            $get_bath[] = $baths_matches[1][0];
+            preg_match_all('/(\d+(?:,\d+)*)\s*sqft/i', $sqm[$i]->nodeValue, $matches);
+            $get_square[] = get_price($matches[1][0]) * 0.3;
+            $get_contact[] = $contact[$i];
+        }
+        $array = [];
+        $array = [
+            'name' => $get_title,
+            'href' => $get_all_href,
+            'price' => $get_price,
+            'bed' => $get_bed,
+            'bath' => $get_bath,
+            'sqm' => $sqm,
+            'contact' => $get_contact
+        ];
+        // Set the content type to JSON to get JSON value
+        header('Content-Type: application/json');
+        // Output the array as JSON
+        echo json_encode($array);
+    }else {
+        $image = $xpath->query('//*[contains(@class, "all-post-thumb")]/a/img');
+        $link = $xpath->query('//*[contains(@class, "all-post-title")]/h2/a');
+        for ($i = 0; $i < count($link); $i++) {
+            $title[] = $link[$i]->nodeValue;
+            $href[] = $link[$i]->getAttribute('href');
+            $img[] = $image[$i]->getAttribute('src');
+        }
+        $array = [];
+        $array = [
+            'title' => $title,
+            'href' => $href,
+            'img' => $img,
+            
+        ];
+         // Set the content type to JSON to get JSON value
+         header('Content-Type: application/json');
+         // Output the array as JSON
+         echo json_encode($array);
     }
 }
 // var_dump($getAllUrls);

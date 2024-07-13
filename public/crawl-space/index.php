@@ -9,8 +9,8 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="crawl-space/bootstrap-css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="./bootstrap-css/bootstrap.min.css" rel="stylesheet" > -->
+    <!-- <link href="crawl-space/bootstrap-css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="./bootstrap-css/bootstrap.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <title>Document</title>
 </head>
@@ -60,7 +60,7 @@ $result = $conn->query($sql);
                         <?php } ?>
                     </select> -->
                     <label for="url">Website</label>
-                    <input class="form-control" type="text" placeholder="Nhập URL Website" value="https://www.century21.com.au/properties-for-sale?searchtype=sale" id='url' name='url'>
+                    <input class="form-control" type="text" placeholder="Nhập URL Website" value="https://www.redfin.com/news/housing-market-news/" id='url' name='url'>
                     <!-- <select class="form-control" id='select' name='select'>
                         <option selected>Chọn website</option>
                         <option value="https://alonhadat.com.vn/nha-dat/can-ban">alonhadat.com.vn/nha-dat/can-ban</option>
@@ -69,11 +69,11 @@ $result = $conn->query($sql);
                 </div>
                 <div class='m-2'>
                     <label for="page">Số trang của website</label>
-                    <input class="form-control" type="text" placeholder="Nhập số trang" value='1' id='page' name='page'>
+                    <input class="form-control" type="text" placeholder="Nhập số trang" value='200' id='page' name='page'>
                 </div>
                 <div class='m-2'>
                     <label for="pageOption">Nhập Url Page</label>
-                    <input class="form-control" type="text" placeholder="Nhập Url Page" value="?page=" id='pageOption' name='pageOption'>
+                    <input class="form-control" type="text" placeholder="Nhập Url Page" value="page/" id='pageOption' name='pageOption'>
                 </div>
                 <div class='m-2'>
                     <label for="xPath">Nhập XPath</label>
@@ -121,8 +121,8 @@ $result = $conn->query($sql);
     </div>
 
     <!-- //FIXME: change path -->
-    <script type='text/javascript' src='crawl-space/js/index.js'>
-        // <script type='text/javascript' src='./js/index.js'>
+    <!-- <script type='text/javascript' src='crawl-space/js/index.js'> -->
+    <script type='text/javascript' src='./js/index.js'>
     </script>
 </body>
 

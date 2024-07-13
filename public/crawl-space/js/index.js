@@ -4,28 +4,31 @@ $("#page").on("input", function (event) {
     input.val(sanitizedValue);
 });
 
-$("#remove").click(function () {
-    $("p, br, .getContent").remove();
-});
-
 $("#select").change(function () {
     var selectedOptions = $(this).find(".getWeb:selected");
     var selectedValues = [];
-
+    var cityValues = [];
     selectedOptions.each(function () {
         var value = $(this).val();
+        var cities = $(this).attr("data-web");
         selectedValues.push(value);
+        cityValues.push(cities);
     });
 
     $(this).attr("data-web", selectedValues.join("|"));
+    $(this).attr("data-city", cityValues.join("|"));
 });
 
 // Example usage:
 $(document).on("click", "#getValue", function (e) {
     e.preventDefault();
     var data = $("#formValue").serializeArray();
+    // $("#getValue").prop("disabled", true);
+    $("#update").prop("disabled", true);
+    $("#updateExist").prop("disabled", true);
     //TODO: uncomment for muaban
-    // var url = $("#select").attr("data-web").split("|");
+    // var url = $("#select").attr("data-web").split("|");  // console.log(cities);
+    // var cities = $("#select").attr("data-city").split("|");
     var url = $("#url").val();
     var page = parseFloat($("#page").val());
     var xPath = $("#xPath").val();
@@ -34,54 +37,29 @@ $(document).on("click", "#getValue", function (e) {
     var price = $("#price").val();
     var location = $("#location").val();
     var detail = $("#detail").val();
-
-    // for (var i = 1; i <= page; i++) {
-    //     if (pageOption.length === 0) {
-    //         var pageNumber = i;
-    //     } else {
-    //         var pageNumber = pageOption + i;
-    //     }
-    //     var lengthLocated = located.length;
-    //     // var all = [];
-    //     // for (var i = 0; i < lengthLocated; i++) {
-    //     //   all.push(url + located[i]);
-    //     // }
-    //     // $.ajax({
-    //     //   data: {
-    //     //     url: all,
-    //     //   },
-    //     //   url: "add_link.php",
-    //     //   method: "post",
-    //     //   success: function (response) {
-    //     //     console.log(response);
-    //     //   },
-    //     // });
-    //     // return;
-    //     for (var l = 0; l < 1; l++) {
-    console.log("ok");
-    //TODO: for century21
-    var link = "https://www.estately.com/WA/Seattle";
-    // FIXME: Using recursive remove function to get original
-    var i = 1;
+    // var url = $("#select").attr("data-url").split("|");
+    var i = page;
     function processNext() {
-        if (i <= 9) {
-            var getUrl = link + pageOption + i;
+        if (i >= 1) {
+            var getUrl = url + pageOption + i;
             // var getUrl = link + pageOption + i + option;
             console.log(getUrl);
             $.ajax({
                 data: {
                     url: getUrl,
+                    // city: getCity,
                     // url: link,
                     xPath: xPath,
                 },
-                url: "/crawl-space/poe.php",
+                url: "poe.php",
                 type: "post",
                 beforeSend: function (xhr) {
                     $("#loadingAlert").fadeIn();
                 },
                 success: function (response) {
                     var result = response[0] || response;
-                    console.log(result);
+                    console.log(result); 
+                    // return
                     var href = result["href"];
                     if (href[0].includes("muaban")) {
                         var infoName = result["name"];
@@ -104,45 +82,61 @@ $(document).on("click", "#getValue", function (e) {
                         var infoBath = result["bath"];
                         var infoSquare = result["sqm"];
                         var infoPrice = result["price"];
+                    } else if (href[0].includes("edgeprop")) {
+                        var infoName = result["name"];
+                        // var infoAddress = result["address"];
+                        var infoBed = result["bed"];
+                        var infoBath = result["bath"];
+                        var infoSquare = result["sqm"];
+                        var infoPrice = result["price"];
+                        var infoContact = result["contact"];
+                    }else{
+                        var title = result['title'];
+                        var href = result['href'];
+                        var img = result['img'];
                     }
-
                     for (var j = 0; j < href.length; j++) {
                         // Using a closure to preserve the value of j
                         $.ajax({
                             data: {
-                                infoName: infoName[j],
-                                infoAddress: infoAddress[j],
-                                infoPrice: infoPrice[j],
-                                infoBed: infoBed[j],
-                                infoBath: infoBath[j],
-                                infoSquare: infoSquare[j],
+                                // getCity: getCity,
+                                // infoName: infoName[j],
+                                // infoAddress: infoAddress[j],
+                                // infoPrice: infoPrice[j],
+                                // infoBed: infoBed[j],
+                                // infoBath: infoBath[j],
+                                // infoSquare: infoSquare[j],
+                                // infoContact: infoContact[j],
+                                title: title[j],
+                                img: img[j],
                                 href: href[j],
                             },
-                            url: "/crawl-space/getInfo.php",
+                            url: "getInfo.php",
                             type: "post",
                             success: function (getInfo) {
                                 console.log(getInfo);
-                                if (getInfo) {
-                                    var geoLocation = getInfo["location"];
-                                    $.ajax({
-                                        data: {
-                                            location: geoLocation,
-                                        },
-                                        url: "/crawl-space/lat_long_convert.php",
-                                        type: "post",
-                                        success: function (getLatLong) {
-                                            console.log(getLatLong);
-                                        },
-                                    });
-                                }
+                                // if (getInfo) {
+                                //     var geoLocation = getInfo["location"];
+                                //     $.ajax({
+                                //         data: {
+                                //             location: geoLocation,
+                                //         },
+                                //         url: "lat_long_convert.php",
+                                //         type: "post",
+                                //         success: function (getLatLong) {
+                                //             console.log(getLatLong);
+                                //         },
+                                //     });
+                                // }
                             },
                         });
                     }
                 },
                 complete: function () {
                     $("#loadingAlert").fadeOut();
-                    setTimeout(processNext, 20000); // Set timeout for 30 seconds after completing the AJAX request
-                    i++;
+                    // setTimeout(processNext, 1000); // Set timeout for 30 seconds after completing the AJAX request
+                    setTimeout(processNext, 10000); // Set timeout for 30 seconds after completing the AJAX request
+                    i--;
                 },
             });
         }
@@ -158,7 +152,7 @@ $("#update").click(function (e) {
         data: {
             action: "update",
         },
-        url: "/crawl-space/update_map.php",
+        url: "update_map.php",
         type: "post",
         success: function (result) {
             if (result !== "none") {
@@ -176,7 +170,7 @@ $(document).on("click", "#updateExist", function (e) {
         data: {
             action: "update_exist",
         },
-        url: "/crawl-space/update_map.php",
+        url: "update_map.php",
         type: "post",
         success: function (result) {
             console.log(result);

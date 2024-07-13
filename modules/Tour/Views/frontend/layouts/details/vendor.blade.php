@@ -27,7 +27,7 @@ $mail = $vendor->email;
                     @endif
                 </h4>
                 {{-- <p>{{ __("Member Since :time", ['time' => date("n/Y", strtotime($vendor->created_at))]) }}</p> --}}
-                <p>{{ __('Member Since :time') }} {{ date('n/Y', strtotime($vendor->created_at)) }}</p>
+                <p>{{ __('Member Since') }} {{ date('n/Y', strtotime($vendor->created_at)) }}</p>
 
                 @if ((!Auth::id() or Auth::id() != $row->create_user) and setting_item('inbox_enable'))
                     <a class="btn bc_start_chat" href="{{ route('user.chat', ['user_id' => $row->create_user]) }}"><i

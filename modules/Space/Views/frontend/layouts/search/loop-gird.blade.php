@@ -9,7 +9,8 @@
     $convert = convertToUSD($row->location_id);
     $number = number_format(convertToUSD($row->location_id), 10, '.', '');
 @endphp
-<div class="item-loop {{ $wrap_class ?? '' }}">
+<div
+    class="item-loop {{ $wrap_class ?? '' }} @if ($current_path) @if (!$row->contact && !$phone) d-none @endif @endif">
     @if ($row->is_featured == '1')
         <div class="featured">
             {{ __('Featured') }}
@@ -140,37 +141,73 @@
             <div class="sale_info">{{ $row->discount_percent }}</div>
         @endif
     </div>
-    <div class="location d-flex justify-content-between">
-        @if ($current_path)
-            @if (!empty($row->location->name))
-                @php
-                    $contact = isset($row->contact) ? $row->contact : null;
-                @endphp
-                @if ($phone)
+    @if ($current_path)
+        <div class="location">
+            @if ($current_path)
+                @if (!empty($row->location->name))
+                    @php
+                        $contact = isset($row->contact) ? $row->contact : null;
+                    @endphp
                     @if ($phone)
-                        <h5>{{ $phone }}</h5>
-                    @elseif($mail)
-                        <h5>{{ $mail }}</h5>
-                    @endif
-                @else
-                    @if ($contact)
-                        <h5>{{ $contact }}</h5>
+                        @if ($phone)
+                            <h5>{{ $phone }}</h5>
+                        @elseif($mail)
+                            <h5>{{ $mail }}</h5>
+                        @endif
                     @else
-                        <h5>No Phone number</h5>
+                        @if ($contact)
+                            <h5>{{ $contact }}</h5>
+                        @else
+                            <h5>No Phone number</h5>
+                        @endif
                     @endif
                 @endif
-                @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
-                <h6>{{ $location->name ?? '' }}</h6>
+            @else
+                @if (!empty($row->location->name))
+                    @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
+                    <h6>{{ $location->name ?? '' }}</h6>
+                @endif
             @endif
-        @else
-            @if (!empty($row->location->name))
-                @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
-                <h6>{{ $location->name ?? '' }}</h6>
+        </div>
+        <div class="location d-flex justify-content-between">
+            @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
+            <h6>{{ $location->name ?? '' }}</h6>
+            @php $date = date('m-d', strtotime($row->created_at)) @endphp
+            <h6>{{ $date }}</h6>
+        </div>
+    @else
+        <div class="location d-flex justify-content-between">
+            @if ($current_path)
+                @if (!empty($row->location->name))
+                    @php
+                        $contact = isset($row->contact) ? $row->contact : null;
+                    @endphp
+                    @if ($phone)
+                        @if ($phone)
+                            <h5>{{ $phone }}</h5>
+                        @elseif($mail)
+                            <h5>{{ $mail }}</h5>
+                        @endif
+                    @else
+                        @if ($contact)
+                            <h5>{{ $contact }}</h5>
+                        @else
+                            <h5>No Phone number</h5>
+                        @endif
+                    @endif
+                    @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
+                    <h6>{{ $location->name ?? '' }}</h6>
+                @endif
+            @else
+                @if (!empty($row->location->name))
+                    @php $location =  $row->location->translateOrOrigin(app()->getLocale()) @endphp
+                    <h6>{{ $location->name ?? '' }}</h6>
+                @endif
             @endif
-        @endif
-        @php $date = date('m-d', strtotime($row->created_at)) @endphp
-        <h6>{{ $date }}</h6>
-    </div>
+            @php $date = date('m-d', strtotime($row->created_at)) @endphp
+            <h6>{{ $date }}</h6>
+        </div>
+    @endif
     @if (setting_item('space_enable_review'))
         <?php
         $reviewData = $row->getScoreReview();

@@ -360,7 +360,7 @@ function processResponse($response)
         $contact = $xpath->query('//*[@class="panel bg-lightest-gray padding-vertical-10 margin-bottom-5"]/p')->item(2)->nodeValue;
         $get_phone = get_phone($contact);
         $image = $xpath->query('//*[@class="loading-spinner-bg gtm-carousel-image"]/img');
-
+        $mail = null;
         $convert_description = '<p style="font-size:16px">' . str_replace("'", "''", $description) . '</p>';
         if (!is_numeric($get_square)) {
             $get_square = 0;
@@ -395,7 +395,101 @@ function processResponse($response)
         header('Content-Type: application/json');
         // // Output the array as JSON
         echo json_encode($array);
-    };
+    } else if (strpos($_POST['href'], 'edgeprop.sg') !== false) {
+
+        $info_name = str_replace("'", "''", $_POST['infoName']);
+        $slug = vn_to_str(mb_strtolower(trim(str_replace("'", "''", $info_name))));
+        $convert_slug = str_replace('--', '-', $slug);
+        $get_bedroom = $_POST['infoBed'];
+        $get_bathroom = $_POST['infoBath'];
+        $get_square = $_POST['infoSquare'];
+        $get_price = $_POST['infoPrice'];
+        $get_number = $get_price;
+        $contact_name = $_POST['infoContact'];
+
+        $content = $xpath->query('//*[@id="__NEXT_DATA__"]')->item(0)->nodeValue;
+        $content = json_decode($content, true);
+
+        //description
+        $description = $content['props']['pageProps']['listingDetails']['response']['info'];
+        $convert_description = '<p style="font-size:16px">' . str_replace("'", "''", $description) . '</p>';
+        //img
+        $get_img = $content['props']['pageProps']['listingDetails']['response']['images'];
+
+        $response = $content['props']['pageProps']['listingDetails']['response'];
+        $get_phone = '+65' . $response['agent_contact'];
+        $mail = $response['agent_email'];
+        $address = $response['asset_street_name'];
+        $location = explode('/', $address);
+        if (count($location) > 2) {
+            $get_address = array_slice($location, -2);
+            $get_location = $get_address[0] . ', ' . $get_address[1] . ', Singapore';
+        } else {
+            $get_location = str_replace('/', ',', $address) . ', Singapore';
+        }
+        $array = [];
+        $array = [
+            'name' => $info_name,
+            'price' => $get_price,
+            'location' => $get_location,
+            'phone' => $get_phone,
+            'img' => $get_img,
+            'description' => $convert_description,
+            'info' => $get_info
+        ];
+        // Set the content type to JSON to get JSON value
+        header('Content-Type: application/json');
+        // // Output the array as JSON
+        echo json_encode($array);
+    } else {
+        $array = null;
+        $date = date('Y-m-d H:m:s');
+        $title = $_POST['title'];
+        $slug = vn_to_str($title);
+        $href = $_POST['href'];
+        $img = $_POST['img'];
+        // Set this to download and save img when http request
+        $opts = array('http' => array('header' => "User-Agent:MyAgent/1.0\r\n"));
+        //Basically adding headers to the request
+        $context = stream_context_create($opts);
+        $image_url = file_get_contents($img, false, $context);
+
+        $file_name = basename($img);
+        $img_name = pathinfo($img, PATHINFO_BASENAME);
+        $extension = pathinfo($img, PATHINFO_EXTENSION);
+        $slug_img = vn_to_str($img_name);
+        //content
+        $content = $xpath->query('//*[contains(@class, "entry-content")]/p | //*[contains(@class, "entry-content")]/img');
+        $html = '';
+        foreach ($content as $node) {
+            $html .= $dom->saveXML($node);
+        }
+        $html = str_replace("'", "''", $html);
+        // $year = date('Y');
+        // $month = date('m');
+        // $day = date('d');
+        // $path = dirname(dirname(__FILE__)) . '/0000/1/' . $year . '/' . $month . '/' . $day;
+        $path = dirname(dirname(__FILE__)) . '/uploads/demo/real_estate/' . $file_name;
+        $path_sql = 'demo/real_estate/' . $file_name;
+        if ($image_url) {
+            file_put_contents($path, $image_url);
+            $sql_img = "INSERT IGNORE INTO media_files (file_name, file_path, file_size, file_type, file_extension, created_at) SELECT '$slug_img', '$path_sql', '', 'image/$extension', '$extension', '$date' FROM dual WHERE NOT EXISTS ( SELECT file_name FROM media_files WHERE file_name = '$slug_img') LIMIT 1";
+            if ($conn->query($sql_img)) {
+                $img_id = $conn->insert_id;
+            } else {
+                echo "Error: $sql_img " . mysqli_error($conn);
+            }
+            // echo 'Image Saved';
+        } else {
+            echo 'Error Occured';
+        }
+        $sql = "INSERT IGNORE INTO core_news (title, content, slug, status, image_id, create_user, created_at) SELECT '$title', '$html', '$slug', 'publish', '$img_id', '1', '$date' FROM dual WHERE NOT EXISTS ( SELECT title FROM core_news WHERE title = '$title') LIMIT 1";
+        if ($conn->query($sql)) {
+            echo 'success';
+        } else {
+            echo "Error: $sql " . mysqli_error($conn);
+        }
+    }
     if ($array) {
         // Download img to file 
         $get_row_img = [];
@@ -466,7 +560,14 @@ function processResponse($response)
             $row_location = mysqli_fetch_assoc($result_location);
             $location_id = $row_location['id'];
         } elseif (strpos($_POST['href'], 'estately') !== false) {
-            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = 'USA'";
+            // Change this
+            $location = $_POST['getCity'];
+            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` like '%$location%'";
+            $result_location = mysqli_query($conn, $sql_location);
+            $row_location = mysqli_fetch_assoc($result_location);
+            $location_id = $row_location['id'];
+        } elseif (strpos($_POST['href'], 'edgeprop') !== false) {
+            $sql_location = "SELECT * FROM `bravo_locations` WHERE `name` = 'Singapore'";
             $result_location = mysqli_query($conn, $sql_location);
             $row_location = mysqli_fetch_assoc($result_location);
             $location_id = $row_location['id'];

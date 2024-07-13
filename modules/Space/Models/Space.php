@@ -164,6 +164,8 @@ class Space extends Bookable
                 $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->contact;
             } elseif ($this->author->id) {
                 $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->author->id;
+            } else {
+                $urlDetail = app_get_locale(false, false, '/') . config('owner.owner_route_prefix') . "/" . $this->contact_name;
             }
             return url($urlDetail);
         } else {

@@ -1248,37 +1248,42 @@ function convertToUSD($location_id)
     if ($location_id > 8 && $location_id < 73) {
         $baseCurrency = 'VND';
         $country = 'Việt Nam';
-        // $date = '2024-05-28';
-        $date = date('Y-m-d');
-        $results = DB::table('api_convert')
+    } elseif ($location_id == 81) {
+        $baseCurrency = 'SGD';
+        $country = 'Singapore';
+    } else {
+        $convert = null;
+        return $convert;
+    }
+    // $date = '2024-05-28';
+    $date = date('Y-m-d');
+    $results = DB::table('api_convert')
+        ->where('country', $country)
+        ->where('created_at', 'LIKE', '%' . $date . '%')
+        ->get();
+    $rate = @$results[0]->convert_rate;
+    if (!$rate) {
+        $result_api = DB::table('api_convert')
             ->where('country', $country)
-            ->where('created_at', 'LIKE', '%' . $date . '%')
             ->get();
-        $rate = @$results[0]->convert_rate;
-        if (!$rate) {
-            $result_api = DB::table('api_convert')
+        $rate = $result_api[0]->convert_rate;
+        $convert_rate = ApiConvert($baseCurrency);
+        if (!strpos($convert_rate, 'Error')) {
+            $data = [
+                'convert_rate' => $convert_rate,
+                'created_at' => $date
+            ];
+            DB::table('api_convert')
                 ->where('country', $country)
-                ->get();
-            $rate = $result_api[0]->convert_rate;
-            $convert_rate = ApiConvert($baseCurrency);
-            if (!strpos($convert_rate, 'Error')) {
-                $data = [
-                    'convert_rate' => $convert_rate,
-                    'created_at' => $date
-                ];
-                DB::table('api_convert')
-                    ->where('country', $country)
-                    ->update($data);
-                $convert = $convert_rate;
-            } else {
-                $convert = $rate;
-            }
+                ->update($data);
+            $convert = $convert_rate;
         } else {
             $convert = $rate;
         }
     } else {
-        $convert = null;
+        $convert = $rate;
     }
+
     return $convert;
 }
 function formatNumberToVietnamese($number, $location_id)
@@ -1289,7 +1294,7 @@ function formatNumberToVietnamese($number, $location_id)
     $billion = floor($format_price / 1000000000);
     $million = floor(($format_price % 1000000000) / 1000000);
     $t = number_format($format_price / 1000000, 2);
-    if ($location_id > 8) {
+    if ($location_id > 8 && $location_id < 73) {
         if ($billion == 0 && $million == 0) {
             $formatted_price = $format_price . ' tr';
         } else {
@@ -1303,6 +1308,22 @@ function formatNumberToVietnamese($number, $location_id)
                 }
             }
         }
+    } elseif ($location_id == 81) {
+        if ($billion == 0 && $million == 0) {
+            $formatted_price = 'S$' . number_format($format_price);
+        } else {
+            if ($billion > 0 && $million == 0) {
+                $formatted_price = 'S$' . $billion . ' B';
+            } else {
+                if ($billion == 0 && $million > 0) {
+                    $formatted_price = 'S$' . $t . ' M';
+                } else {
+                    $formatted_price = 'S$' . $billion . ' B ' . $million . ' M';
+                }
+            }
+        }
+    }elseif($location_id ==82){
+        
     } else {
         if ($billion == 0 && $million == 0) {
             $formatted_price = '$' . number_format($format_price);
@@ -1331,7 +1352,7 @@ function formatNumberToVietnameseRound($number, $location_id)
     $m = floor(($format_price % 1000000000) / 1000000);
     $t = number_format($format_price / 1000000, 2);
     $k = number_format($format_price / 1000, 0);
-    if ($location_id > 8) {
+    if ($location_id > 8 && $location_id < 73) {
         if ($billion == 0 && $million == 0) {
             $formatted_price = $m . ' tr';
         } else {
